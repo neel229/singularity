@@ -1,0 +1,12 @@
+DROP TABLE IF EXISTS "trade";
+DROP TABLE IF EXISTS "virgin_trade";
+DROP TABLE IF EXISTS "offer";
+DROP TABLE IF EXISTS "virgin_offer";
+DROP TABLE IF EXISTS "portfolio";
+DROP TABLE IF EXISTS "creator";
+DROP TABLE IF EXISTS "user";
+DROP TABLE IF EXISTS "report";
+DROP TABLE IF EXISTS "price";
+DROP TABLE IF EXISTS "stock";
+DROP TABLE IF EXISTS "currency_rate";
+DROP TABLE IF EXISTS "currency";
