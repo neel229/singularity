@@ -16,8 +16,7 @@ CREATE TABLE "currency_rate" (
 CREATE TABLE "stock" (
   "id" bigserial PRIMARY KEY,
   "ticker" varchar(8),
-  "creator_first_name" varchar(64),
-  "creator_last_name" varchar(64),
+  "creator_id" bigserial,
   "details" text
 );
 
@@ -131,9 +130,7 @@ ALTER TABLE "user" ADD FOREIGN KEY ("preferred_currency_id") REFERENCES "currenc
 
 ALTER TABLE "creator" ADD FOREIGN KEY ("preferred_currency_id") REFERENCES "currency" ("id");
 
-ALTER TABLE "creator" ADD FOREIGN KEY ("first_name") REFERENCES "stock" ("creator_first_name");
-
-ALTER TABLE "creator" ADD FOREIGN KEY ("last_name") REFERENCES "stock" ("creator_last_name");
+ALTER TABLE "creator" ADD FOREIGN KEY ("id") REFERENCES "stock" ("id");
 
 ALTER TABLE "price" ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
 

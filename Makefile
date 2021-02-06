@@ -11,6 +11,6 @@ migrateup:
 	 .migrate.linux-amd64 -path pkg/db/migration -database "postgresql://root:postgres@localhost:5432/stockmarket-simulator?sslmode=disabled" -verbose up
 
 migratedown:
- .migrate.linux-amd64 -path pkg/db/migration -database "postgresql://root:postgres@localhost:5432/stockmarket-simulator?sslmode=disabled" -verbose down
+	 .migrate.linux-amd64 -path pkg/db/migration -database "postgresql://root:postgres@localhost:5432/stockmarket-simulator?sslmode=disabled" -verbose down
 
-.PHONY: postgres createdb dropdb 
+.PHONY: postgres createdb dropdb migrateup migratedown
