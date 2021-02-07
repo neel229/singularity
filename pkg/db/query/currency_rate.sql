@@ -15,6 +15,5 @@ LIMIT 1;
 
 -- name: UpdateCurrencyRate :exec
 UPDATE currency_rate
-SET rate = $3
-WHERE currency_id = $1 
-AND base_currency_id = $2;
+SET rate = $2
+WHERE id = $1;

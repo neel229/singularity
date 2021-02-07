@@ -59,18 +59,16 @@ func (q *Queries) GetCurrencyRate(ctx context.Context, id int64) (CurrencyRate, 
 
 const updateCurrencyRate = `-- name: UpdateCurrencyRate :exec
 UPDATE currency_rate
-SET rate = $3
-WHERE currency_id = $1 
-AND base_currency_id = $2
+SET rate = $2
+WHERE id = $1
 `
 
 type UpdateCurrencyRateParams struct {
-	CurrencyID     sql.NullInt32  `json:"currency_id"`
-	BaseCurrencyID sql.NullInt32  `json:"base_currency_id"`
-	Rate           sql.NullString `json:"rate"`
+	ID   int64          `json:"id"`
+	Rate sql.NullString `json:"rate"`
 }
 
 func (q *Queries) UpdateCurrencyRate(ctx context.Context, arg UpdateCurrencyRateParams) error {
-	_, err := q.db.ExecContext(ctx, updateCurrencyRate, arg.CurrencyID, arg.BaseCurrencyID, arg.Rate)
+	_, err := q.db.ExecContext(ctx, updateCurrencyRate, arg.ID, arg.Rate)
 	return err
 }
