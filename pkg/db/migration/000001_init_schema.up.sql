@@ -1,5 +1,5 @@
 CREATE TABLE "currency" (
-  "id" SERIAL PRIMARY KEY,
+  "id" bigserial PRIMARY KEY,
   "code" varchar(8),
   "name" varchar(64),
   "is_base" bool

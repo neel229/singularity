@@ -12,5 +12,8 @@ migrateup:
 
 migratedown:
 	 .migrate.linux-amd64 -path pkg/db/migration -database "postgresql://root:postgres@localhost:5432/stockmarket-simulator?sslmode=disabled" -verbose down
+	
+sqlc:
+	sqlc generate
 
-.PHONY: postgres createdb dropdb migrateup migratedown
+.PHONY: postgres createdb dropdb migrateup migratedown sqlc
