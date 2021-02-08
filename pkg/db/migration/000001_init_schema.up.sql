@@ -43,7 +43,7 @@ CREATE TABLE "report" (
   "volume" decimal(16,6)
 );
 
-CREATE TABLE "user" (
+CREATE TABLE "fan" (
   "id" bigserial PRIMARY KEY,
   "first_name" varchar(64),
   "last_name" varchar(64),
@@ -71,7 +71,7 @@ CREATE TABLE "creator" (
 
 CREATE TABLE "portfolio" (
   "id" bigserial PRIMARY KEY,
-  "user_id" bigserial,
+  "fan_id" bigserial,
   "stock_id" bigserial,
   "quantity" decimal(16,6)
 );
@@ -126,7 +126,7 @@ ALTER TABLE "price" ADD FOREIGN KEY ("currency_id") REFERENCES "currency" ("id")
 
 ALTER TABLE "report" ADD FOREIGN KEY ("currency_id") REFERENCES "currency" ("id");
 
-ALTER TABLE "user" ADD FOREIGN KEY ("preferred_currency_id") REFERENCES "currency" ("id");
+ALTER TABLE "fan" ADD FOREIGN KEY ("preferred_currency_id") REFERENCES "currency" ("id");
 
 ALTER TABLE "creator" ADD FOREIGN KEY ("preferred_currency_id") REFERENCES "currency" ("id");
 
@@ -140,7 +140,7 @@ ALTER TABLE "trade" ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
 
 ALTER TABLE "offer" ADD FOREIGN KEY ("trader_id") REFERENCES "creator" ("id");
 
-ALTER TABLE "portfolio" ADD FOREIGN KEY ("user_id") REFERENCES "creator" ("id");
+ALTER TABLE "portfolio" ADD FOREIGN KEY ("fan_id") REFERENCES "creator" ("id");
 
 ALTER TABLE "virgin_trade" ADD FOREIGN KEY ("creator_id") REFERENCES "creator" ("id");
 
@@ -150,15 +150,15 @@ ALTER TABLE "trade" ADD FOREIGN KEY ("buyer_id") REFERENCES "creator" ("id");
 
 ALTER TABLE "trade" ADD FOREIGN KEY ("seller_id") REFERENCES "creator" ("id");
 
-ALTER TABLE "offer" ADD FOREIGN KEY ("trader_id") REFERENCES "user" ("id");
+ALTER TABLE "offer" ADD FOREIGN KEY ("trader_id") REFERENCES "fan" ("id");
 
-ALTER TABLE "portfolio" ADD FOREIGN KEY ("user_id") REFERENCES "user" ("id");
+ALTER TABLE "portfolio" ADD FOREIGN KEY ("fan_id") REFERENCES "fan" ("id");
 
-ALTER TABLE "virgin_trade" ADD FOREIGN KEY ("buyer_id") REFERENCES "user" ("id");
+ALTER TABLE "virgin_trade" ADD FOREIGN KEY ("buyer_id") REFERENCES "fan" ("id");
 
-ALTER TABLE "trade" ADD FOREIGN KEY ("buyer_id") REFERENCES "user" ("id");
+ALTER TABLE "trade" ADD FOREIGN KEY ("buyer_id") REFERENCES "fan" ("id");
 
-ALTER TABLE "trade" ADD FOREIGN KEY ("seller_id") REFERENCES "user" ("id");
+ALTER TABLE "trade" ADD FOREIGN KEY ("seller_id") REFERENCES "fan" ("id");
 
 ALTER TABLE "portfolio" ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
 
@@ -168,7 +168,7 @@ ALTER TABLE "trade" ADD FOREIGN KEY ("offer_id") REFERENCES "offer" ("id");
 
 ALTER TABLE "virgin_trade" ADD FOREIGN KEY ("virgin_offer_id") REFERENCES "offer" ("id");
 
-COMMENT ON COLUMN "user"."password" IS 'Should be 64 based encoded value';
+COMMENT ON COLUMN "fan"."password" IS 'Should be 64 based encoded value';
 
 COMMENT ON COLUMN "creator"."password" IS 'Should be 64 based encoded value';
 

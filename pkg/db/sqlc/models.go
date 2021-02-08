@@ -38,6 +38,19 @@ type CurrencyRate struct {
 	Ts             time.Time      `json:"ts"`
 }
 
+type Fan struct {
+	ID        int64          `json:"id"`
+	FirstName sql.NullString `json:"first_name"`
+	LastName  sql.NullString `json:"last_name"`
+	UserName  sql.NullString `json:"user_name"`
+	// Should be 64 based encoded value
+	Password            sql.NullString `json:"password"`
+	Email               sql.NullString `json:"email"`
+	TimeRegistered      time.Time      `json:"time_registered"`
+	TimeConfirmed       time.Time      `json:"time_confirmed"`
+	PreferredCurrencyID sql.NullInt32  `json:"preferred_currency_id"`
+}
+
 type Offer struct {
 	ID       int64          `json:"id"`
 	TraderID sql.NullInt64  `json:"trader_id"`
@@ -51,7 +64,7 @@ type Offer struct {
 
 type Portfolio struct {
 	ID       int64          `json:"id"`
-	UserID   sql.NullInt64  `json:"user_id"`
+	FanID    sql.NullInt64  `json:"fan_id"`
 	StockID  sql.NullInt64  `json:"stock_id"`
 	Quantity sql.NullString `json:"quantity"`
 }
@@ -95,19 +108,6 @@ type Trade struct {
 	UnitPrice sql.NullString `json:"unit_price"`
 	Details   sql.NullString `json:"details"`
 	OfferID   sql.NullInt64  `json:"offer_id"`
-}
-
-type User struct {
-	ID        int64          `json:"id"`
-	FirstName sql.NullString `json:"first_name"`
-	LastName  sql.NullString `json:"last_name"`
-	UserName  sql.NullString `json:"user_name"`
-	// Should be 64 based encoded value
-	Password            sql.NullString `json:"password"`
-	Email               sql.NullString `json:"email"`
-	TimeRegistered      time.Time      `json:"time_registered"`
-	TimeConfirmed       time.Time      `json:"time_confirmed"`
-	PreferredCurrencyID sql.NullInt32  `json:"preferred_currency_id"`
 }
 
 type VirginOffer struct {
