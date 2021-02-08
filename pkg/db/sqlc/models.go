@@ -63,10 +63,11 @@ type Offer struct {
 }
 
 type Portfolio struct {
-	ID       int64          `json:"id"`
-	FanID    sql.NullInt64  `json:"fan_id"`
-	StockID  sql.NullInt64  `json:"stock_id"`
-	Quantity sql.NullString `json:"quantity"`
+	ID        int64          `json:"id"`
+	FanID     sql.NullInt64  `json:"fan_id"`
+	CreatorID sql.NullInt64  `json:"creator_id"`
+	StockID   sql.NullInt64  `json:"stock_id"`
+	Quantity  sql.NullString `json:"quantity"`
 }
 
 type Price struct {
