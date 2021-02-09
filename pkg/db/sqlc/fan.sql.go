@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createFan = `-- name: CreateFan :one
@@ -22,12 +21,12 @@ INSERT INTO fan (
 `
 
 type CreateFanParams struct {
-	FirstName           sql.NullString `json:"first_name"`
-	LastName            sql.NullString `json:"last_name"`
-	UserName            sql.NullString `json:"user_name"`
-	Password            sql.NullString `json:"password"`
-	Email               sql.NullString `json:"email"`
-	PreferredCurrencyID sql.NullInt32  `json:"preferred_currency_id"`
+	FirstName           string `json:"first_name"`
+	LastName            string `json:"last_name"`
+	UserName            string `json:"user_name"`
+	Password            string `json:"password"`
+	Email               string `json:"email"`
+	PreferredCurrencyID int32  `json:"preferred_currency_id"`
 }
 
 func (q *Queries) CreateFan(ctx context.Context, arg CreateFanParams) (Fan, error) {
@@ -84,8 +83,8 @@ WHERE id = $1
 `
 
 type UpdateEmailParams struct {
-	ID    int64          `json:"id"`
-	Email sql.NullString `json:"email"`
+	ID    int64  `json:"id"`
+	Email string `json:"email"`
 }
 
 func (q *Queries) UpdateEmail(ctx context.Context, arg UpdateEmailParams) error {
@@ -100,8 +99,8 @@ WHERE id = $1
 `
 
 type UpdatePasswordParams struct {
-	ID       int64          `json:"id"`
-	Password sql.NullString `json:"password"`
+	ID       int64  `json:"id"`
+	Password string `json:"password"`
 }
 
 func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) error {
@@ -116,8 +115,8 @@ WHERE id = $1
 `
 
 type UpdatePreferredCurrencyParams struct {
-	ID                  int64         `json:"id"`
-	PreferredCurrencyID sql.NullInt32 `json:"preferred_currency_id"`
+	ID                  int64 `json:"id"`
+	PreferredCurrencyID int32 `json:"preferred_currency_id"`
 }
 
 func (q *Queries) UpdatePreferredCurrency(ctx context.Context, arg UpdatePreferredCurrencyParams) error {

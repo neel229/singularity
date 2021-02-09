@@ -8,10 +8,10 @@ dropdb:
 	docker exec -it postgres13 dropdb stockmarket-simulator
 
 migrateup:
-	 .migrate.linux-amd64 -path pkg/db/migration -database "postgresql://root:postgres@localhost:5432/stockmarket-simulator?sslmode=disabled" -verbose up
+	 .migrate.linux-amd64 -path pkg/db/migration -database "postgresql://root:postgres@localhost:5432/stockmarket-simulator?sslmode=disable" -verbose up
 
 migratedown:
-	 .migrate.linux-amd64 -path pkg/db/migration -database "postgresql://root:postgres@localhost:5432/stockmarket-simulator?sslmode=disabled" -verbose down
+	 .migrate.linux-amd64 -path pkg/db/migration -database "postgresql://root:postgres@localhost:5432/stockmarket-simulator?sslmode=disable" -verbose down
 	
 sqlc:
 	sqlc generate

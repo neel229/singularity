@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createCreator = `-- name: CreateCreator :one
@@ -24,14 +23,14 @@ INSERT INTO creator (
 `
 
 type CreateCreatorParams struct {
-	FirstName           sql.NullString `json:"first_name"`
-	LastName            sql.NullString `json:"last_name"`
-	UserName            sql.NullString `json:"user_name"`
-	Email               sql.NullString `json:"email"`
-	Password            sql.NullString `json:"password"`
-	PreferredCurrencyID sql.NullInt32  `json:"preferred_currency_id"`
-	CreatorStock        sql.NullInt64  `json:"creator_stock"`
-	VirginTokensLeft    sql.NullInt32  `json:"virgin_tokens_left"`
+	FirstName           string `json:"first_name"`
+	LastName            string `json:"last_name"`
+	UserName            string `json:"user_name"`
+	Email               string `json:"email"`
+	Password            string `json:"password"`
+	PreferredCurrencyID int32  `json:"preferred_currency_id"`
+	CreatorStock        int64  `json:"creator_stock"`
+	VirginTokensLeft    int32  `json:"virgin_tokens_left"`
 }
 
 func (q *Queries) CreateCreator(ctx context.Context, arg CreateCreatorParams) (Creator, error) {
@@ -93,9 +92,9 @@ WHERE id = $1
 LIMIT 1
 `
 
-func (q *Queries) GetVirginTokensLeft(ctx context.Context, id int64) (sql.NullInt32, error) {
+func (q *Queries) GetVirginTokensLeft(ctx context.Context, id int64) (int32, error) {
 	row := q.db.QueryRowContext(ctx, getVirginTokensLeft, id)
-	var virgin_tokens_left sql.NullInt32
+	var virgin_tokens_left int32
 	err := row.Scan(&virgin_tokens_left)
 	return virgin_tokens_left, err
 }
@@ -154,8 +153,8 @@ WHERE id = $1
 `
 
 type UpdateCreatorEmailParams struct {
-	ID    int64          `json:"id"`
-	Email sql.NullString `json:"email"`
+	ID    int64  `json:"id"`
+	Email string `json:"email"`
 }
 
 func (q *Queries) UpdateCreatorEmail(ctx context.Context, arg UpdateCreatorEmailParams) error {
@@ -170,8 +169,8 @@ WHERE id = $1
 `
 
 type UpdateCreatorPasswordParams struct {
-	ID       int64          `json:"id"`
-	Password sql.NullString `json:"password"`
+	ID       int64  `json:"id"`
+	Password string `json:"password"`
 }
 
 func (q *Queries) UpdateCreatorPassword(ctx context.Context, arg UpdateCreatorPasswordParams) error {
@@ -186,8 +185,8 @@ WHERE id = $1
 `
 
 type UpdateCreatorPreferredCurrencyParams struct {
-	ID                  int64         `json:"id"`
-	PreferredCurrencyID sql.NullInt32 `json:"preferred_currency_id"`
+	ID                  int64 `json:"id"`
+	PreferredCurrencyID int32 `json:"preferred_currency_id"`
 }
 
 func (q *Queries) UpdateCreatorPreferredCurrency(ctx context.Context, arg UpdateCreatorPreferredCurrencyParams) error {
@@ -202,8 +201,8 @@ WHERE id = $1
 `
 
 type UpdateVirginTokensLeftParams struct {
-	ID               int64         `json:"id"`
-	VirginTokensLeft sql.NullInt32 `json:"virgin_tokens_left"`
+	ID               int64 `json:"id"`
+	VirginTokensLeft int32 `json:"virgin_tokens_left"`
 }
 
 func (q *Queries) UpdateVirginTokensLeft(ctx context.Context, arg UpdateVirginTokensLeftParams) error {

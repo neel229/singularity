@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const creatorTrade = `-- name: CreatorTrade :one
@@ -23,13 +22,13 @@ INSERT INTO trade (
 `
 
 type CreatorTradeParams struct {
-	StockID   sql.NullInt64  `json:"stock_id"`
-	BuyerID   sql.NullInt64  `json:"buyer_id"`
-	SellerID  sql.NullInt64  `json:"seller_id"`
-	Quantity  sql.NullString `json:"quantity"`
-	UnitPrice sql.NullString `json:"unit_price"`
-	Details   sql.NullString `json:"details"`
-	OfferID   sql.NullInt64  `json:"offer_id"`
+	StockID   int64  `json:"stock_id"`
+	BuyerID   int64  `json:"buyer_id"`
+	SellerID  int64  `json:"seller_id"`
+	Quantity  string `json:"quantity"`
+	UnitPrice string `json:"unit_price"`
+	Details   string `json:"details"`
+	OfferID   int64  `json:"offer_id"`
 }
 
 func (q *Queries) CreatorTrade(ctx context.Context, arg CreatorTradeParams) (Trade, error) {
@@ -87,9 +86,9 @@ OFFSET $3
 `
 
 type GetTradesByBuyerParams struct {
-	BuyerID sql.NullInt64 `json:"buyer_id"`
-	Limit   int32         `json:"limit"`
-	Offset  int32         `json:"offset"`
+	BuyerID int64 `json:"buyer_id"`
+	Limit   int32 `json:"limit"`
+	Offset  int32 `json:"offset"`
 }
 
 func (q *Queries) GetTradesByBuyer(ctx context.Context, arg GetTradesByBuyerParams) ([]Trade, error) {
@@ -133,9 +132,9 @@ OFFSET $3
 `
 
 type GetTradesBySellerParams struct {
-	SellerID sql.NullInt64 `json:"seller_id"`
-	Limit    int32         `json:"limit"`
-	Offset   int32         `json:"offset"`
+	SellerID int64 `json:"seller_id"`
+	Limit    int32 `json:"limit"`
+	Offset   int32 `json:"offset"`
 }
 
 func (q *Queries) GetTradesBySeller(ctx context.Context, arg GetTradesBySellerParams) ([]Trade, error) {

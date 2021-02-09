@@ -3,130 +3,129 @@
 package db
 
 import (
-	"database/sql"
 	"time"
 )
 
 type Creator struct {
-	ID        int64          `json:"id"`
-	FirstName sql.NullString `json:"first_name"`
-	LastName  sql.NullString `json:"last_name"`
-	UserName  sql.NullString `json:"user_name"`
+	ID        int64  `json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	UserName  string `json:"user_name"`
 	// Should be 64 based encoded value
-	Password            sql.NullString `json:"password"`
-	Email               sql.NullString `json:"email"`
-	TimeRegistered      time.Time      `json:"time_registered"`
-	TimeConfirmed       time.Time      `json:"time_confirmed"`
-	PreferredCurrencyID sql.NullInt32  `json:"preferred_currency_id"`
-	CreatorStock        sql.NullInt64  `json:"creator_stock"`
+	Password            string    `json:"password"`
+	Email               string    `json:"email"`
+	TimeRegistered      time.Time `json:"time_registered"`
+	TimeConfirmed       time.Time `json:"time_confirmed"`
+	PreferredCurrencyID int32     `json:"preferred_currency_id"`
+	CreatorStock        int64     `json:"creator_stock"`
 	// Number of stocks the creator owns of his/hers
-	VirginTokensLeft sql.NullInt32 `json:"virgin_tokens_left"`
+	VirginTokensLeft int32 `json:"virgin_tokens_left"`
 }
 
 type Currency struct {
-	ID     int64          `json:"id"`
-	Code   sql.NullString `json:"code"`
-	Name   sql.NullString `json:"name"`
-	IsBase sql.NullBool   `json:"is_base"`
+	ID     int32  `json:"id"`
+	Code   string `json:"code"`
+	Name   string `json:"name"`
+	IsBase bool   `json:"is_base"`
 }
 
 type CurrencyRate struct {
-	ID             int64          `json:"id"`
-	CurrencyID     sql.NullInt32  `json:"currency_id"`
-	BaseCurrencyID sql.NullInt32  `json:"base_currency_id"`
-	Rate           sql.NullString `json:"rate"`
-	Ts             time.Time      `json:"ts"`
+	ID             int64     `json:"id"`
+	CurrencyID     int32     `json:"currency_id"`
+	BaseCurrencyID int32     `json:"base_currency_id"`
+	Rate           string    `json:"rate"`
+	Ts             time.Time `json:"ts"`
 }
 
 type Fan struct {
-	ID        int64          `json:"id"`
-	FirstName sql.NullString `json:"first_name"`
-	LastName  sql.NullString `json:"last_name"`
-	UserName  sql.NullString `json:"user_name"`
+	ID        int64  `json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	UserName  string `json:"user_name"`
 	// Should be 64 based encoded value
-	Password            sql.NullString `json:"password"`
-	Email               sql.NullString `json:"email"`
-	TimeRegistered      time.Time      `json:"time_registered"`
-	TimeConfirmed       time.Time      `json:"time_confirmed"`
-	PreferredCurrencyID sql.NullInt32  `json:"preferred_currency_id"`
+	Password            string    `json:"password"`
+	Email               string    `json:"email"`
+	TimeRegistered      time.Time `json:"time_registered"`
+	TimeConfirmed       time.Time `json:"time_confirmed"`
+	PreferredCurrencyID int32     `json:"preferred_currency_id"`
 }
 
 type Offer struct {
-	ID       int64          `json:"id"`
-	TraderID sql.NullInt64  `json:"trader_id"`
-	StockID  sql.NullInt64  `json:"stock_id"`
-	Quantity sql.NullString `json:"quantity"`
-	Buy      sql.NullBool   `json:"buy"`
-	Sell     sql.NullBool   `json:"sell"`
-	Price    sql.NullString `json:"price"`
-	Ts       time.Time      `json:"ts"`
+	ID       int64     `json:"id"`
+	TraderID int64     `json:"trader_id"`
+	StockID  int64     `json:"stock_id"`
+	Quantity string    `json:"quantity"`
+	Buy      bool      `json:"buy"`
+	Sell     bool      `json:"sell"`
+	Price    string    `json:"price"`
+	Ts       time.Time `json:"ts"`
 }
 
 type Portfolio struct {
-	ID        int64          `json:"id"`
-	FanID     sql.NullInt64  `json:"fan_id"`
-	CreatorID sql.NullInt64  `json:"creator_id"`
-	StockID   sql.NullInt64  `json:"stock_id"`
-	Quantity  sql.NullString `json:"quantity"`
+	ID        int64  `json:"id"`
+	FanID     int64  `json:"fan_id"`
+	CreatorID int64  `json:"creator_id"`
+	StockID   int64  `json:"stock_id"`
+	Quantity  string `json:"quantity"`
 }
 
 type Price struct {
-	ID         int64          `json:"id"`
-	StockID    sql.NullInt64  `json:"stock_id"`
-	CurrencyID sql.NullInt32  `json:"currency_id"`
-	Buy        sql.NullString `json:"buy"`
-	Sell       sql.NullString `json:"sell"`
-	Ts         time.Time      `json:"ts"`
+	ID         int64     `json:"id"`
+	StockID    int64     `json:"stock_id"`
+	CurrencyID int32     `json:"currency_id"`
+	Buy        string    `json:"buy"`
+	Sell       string    `json:"sell"`
+	Ts         time.Time `json:"ts"`
 }
 
 type Report struct {
-	ID          int64          `json:"id"`
-	TradingDate sql.NullTime   `json:"trading_date"`
-	StockID     sql.NullInt64  `json:"stock_id"`
-	CurrencyID  sql.NullInt32  `json:"currency_id"`
-	FirstPrice  sql.NullString `json:"first_price"`
-	LastPrice   sql.NullString `json:"last_price"`
-	MinPrice    sql.NullString `json:"min_price"`
-	MaxPrice    sql.NullString `json:"max_price"`
-	AvgPrice    sql.NullString `json:"avg_price"`
-	TotalAmount sql.NullString `json:"total_amount"`
-	Volume      sql.NullString `json:"volume"`
+	ID          int64     `json:"id"`
+	TradingDate time.Time `json:"trading_date"`
+	StockID     int64     `json:"stock_id"`
+	CurrencyID  int32     `json:"currency_id"`
+	FirstPrice  string    `json:"first_price"`
+	LastPrice   string    `json:"last_price"`
+	MinPrice    string    `json:"min_price"`
+	MaxPrice    string    `json:"max_price"`
+	AvgPrice    string    `json:"avg_price"`
+	TotalAmount string    `json:"total_amount"`
+	Volume      string    `json:"volume"`
 }
 
 type Stock struct {
-	ID        int64          `json:"id"`
-	Ticker    sql.NullString `json:"ticker"`
-	CreatorID sql.NullInt64  `json:"creator_id"`
-	Details   sql.NullString `json:"details"`
+	ID        int64  `json:"id"`
+	Ticker    string `json:"ticker"`
+	CreatorID int64  `json:"creator_id"`
+	Details   string `json:"details"`
 }
 
 type Trade struct {
-	ID        int64          `json:"id"`
-	StockID   sql.NullInt64  `json:"stock_id"`
-	BuyerID   sql.NullInt64  `json:"buyer_id"`
-	SellerID  sql.NullInt64  `json:"seller_id"`
-	Quantity  sql.NullString `json:"quantity"`
-	UnitPrice sql.NullString `json:"unit_price"`
-	Details   sql.NullString `json:"details"`
-	OfferID   sql.NullInt64  `json:"offer_id"`
+	ID        int64  `json:"id"`
+	StockID   int64  `json:"stock_id"`
+	BuyerID   int64  `json:"buyer_id"`
+	SellerID  int64  `json:"seller_id"`
+	Quantity  string `json:"quantity"`
+	UnitPrice string `json:"unit_price"`
+	Details   string `json:"details"`
+	OfferID   int64  `json:"offer_id"`
 }
 
 type VirginOffer struct {
-	ID        int64          `json:"id"`
-	CreatorID sql.NullInt64  `json:"creator_id"`
-	StockID   sql.NullInt64  `json:"stock_id"`
-	Quantity  sql.NullString `json:"quantity"`
-	Price     sql.NullString `json:"price"`
-	Ts        time.Time      `json:"ts"`
+	ID        int64     `json:"id"`
+	CreatorID int64     `json:"creator_id"`
+	StockID   int64     `json:"stock_id"`
+	Quantity  string    `json:"quantity"`
+	Price     string    `json:"price"`
+	Ts        time.Time `json:"ts"`
 }
 
 type VirginTrade struct {
-	ID            int64          `json:"id"`
-	StockID       sql.NullInt64  `json:"stock_id"`
-	CreatorID     sql.NullInt64  `json:"creator_id"`
-	BuyerID       sql.NullInt64  `json:"buyer_id"`
-	Quantity      sql.NullString `json:"quantity"`
-	UnitPrice     sql.NullString `json:"unit_price"`
-	Details       sql.NullString `json:"details"`
-	VirginOfferID sql.NullInt64  `json:"virgin_offer_id"`
+	ID            int64  `json:"id"`
+	StockID       int64  `json:"stock_id"`
+	CreatorID     int64  `json:"creator_id"`
+	BuyerID       int64  `json:"buyer_id"`
+	Quantity      string `json:"quantity"`
+	UnitPrice     string `json:"unit_price"`
+	Details       string `json:"details"`
+	VirginOfferID int64  `json:"virgin_offer_id"`
 }

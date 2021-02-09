@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createVirginOffer = `-- name: CreateVirginOffer :one
@@ -20,10 +19,10 @@ INSERT INTO virgin_offer (
 `
 
 type CreateVirginOfferParams struct {
-	CreatorID sql.NullInt64  `json:"creator_id"`
-	StockID   sql.NullInt64  `json:"stock_id"`
-	Quantity  sql.NullString `json:"quantity"`
-	Price     sql.NullString `json:"price"`
+	CreatorID int64  `json:"creator_id"`
+	StockID   int64  `json:"stock_id"`
+	Quantity  string `json:"quantity"`
+	Price     string `json:"price"`
 }
 
 func (q *Queries) CreateVirginOffer(ctx context.Context, arg CreateVirginOfferParams) (VirginOffer, error) {
@@ -74,9 +73,9 @@ OFFSET $3
 `
 
 type ListVirginOffersParams struct {
-	CreatorID sql.NullInt64 `json:"creator_id"`
-	Limit     int32         `json:"limit"`
-	Offset    int32         `json:"offset"`
+	CreatorID int64 `json:"creator_id"`
+	Limit     int32 `json:"limit"`
+	Offset    int32 `json:"offset"`
 }
 
 func (q *Queries) ListVirginOffers(ctx context.Context, arg ListVirginOffersParams) ([]VirginOffer, error) {

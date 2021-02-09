@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createCurrency = `-- name: CreateCurrency :one
@@ -20,9 +19,9 @@ RETURNING id, code, name, is_base
 `
 
 type CreateCurrencyParams struct {
-	Code   sql.NullString `json:"code"`
-	Name   sql.NullString `json:"name"`
-	IsBase sql.NullBool   `json:"is_base"`
+	Code   string `json:"code"`
+	Name   string `json:"name"`
+	IsBase bool   `json:"is_base"`
 }
 
 func (q *Queries) CreateCurrency(ctx context.Context, arg CreateCurrencyParams) (Currency, error) {
@@ -42,7 +41,7 @@ DELETE FROM currency
 WHERE id = $1
 `
 
-func (q *Queries) DeleteCurrency(ctx context.Context, id int64) error {
+func (q *Queries) DeleteCurrency(ctx context.Context, id int32) error {
 	_, err := q.db.ExecContext(ctx, deleteCurrency, id)
 	return err
 }
@@ -52,7 +51,7 @@ SELECT id, code, name, is_base FROM currency
 WHERE id = $1 LIMIT 1
 `
 
-func (q *Queries) GetCurrency(ctx context.Context, id int64) (Currency, error) {
+func (q *Queries) GetCurrency(ctx context.Context, id int32) (Currency, error) {
 	row := q.db.QueryRowContext(ctx, getCurrency, id)
 	var i Currency
 	err := row.Scan(
@@ -111,8 +110,8 @@ WHERE id = $1
 `
 
 type UpdateCurrencyParams struct {
-	ID     int64        `json:"id"`
-	IsBase sql.NullBool `json:"is_base"`
+	ID     int32 `json:"id"`
+	IsBase bool  `json:"is_base"`
 }
 
 func (q *Queries) UpdateCurrency(ctx context.Context, arg UpdateCurrencyParams) error {

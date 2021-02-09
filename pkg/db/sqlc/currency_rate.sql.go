@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createCurrencyRate = `-- name: CreateCurrencyRate :one
@@ -20,9 +19,9 @@ RETURNING id, currency_id, base_currency_id, rate, ts
 `
 
 type CreateCurrencyRateParams struct {
-	CurrencyID     sql.NullInt32  `json:"currency_id"`
-	BaseCurrencyID sql.NullInt32  `json:"base_currency_id"`
-	Rate           sql.NullString `json:"rate"`
+	CurrencyID     int32  `json:"currency_id"`
+	BaseCurrencyID int32  `json:"base_currency_id"`
+	Rate           string `json:"rate"`
 }
 
 func (q *Queries) CreateCurrencyRate(ctx context.Context, arg CreateCurrencyRateParams) (CurrencyRate, error) {
@@ -64,8 +63,8 @@ WHERE id = $1
 `
 
 type UpdateCurrencyRateParams struct {
-	ID   int64          `json:"id"`
-	Rate sql.NullString `json:"rate"`
+	ID   int64  `json:"id"`
+	Rate string `json:"rate"`
 }
 
 func (q *Queries) UpdateCurrencyRate(ctx context.Context, arg UpdateCurrencyRateParams) error {

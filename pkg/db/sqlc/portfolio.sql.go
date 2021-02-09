@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createPortfolio = `-- name: CreatePortfolio :one
@@ -20,10 +19,10 @@ INSERT INTO portfolio (
 `
 
 type CreatePortfolioParams struct {
-	FanID     sql.NullInt64  `json:"fan_id"`
-	CreatorID sql.NullInt64  `json:"creator_id"`
-	StockID   sql.NullInt64  `json:"stock_id"`
-	Quantity  sql.NullString `json:"quantity"`
+	FanID     int64  `json:"fan_id"`
+	CreatorID int64  `json:"creator_id"`
+	StockID   int64  `json:"stock_id"`
+	Quantity  string `json:"quantity"`
 }
 
 func (q *Queries) CreatePortfolio(ctx context.Context, arg CreatePortfolioParams) (Portfolio, error) {
@@ -80,8 +79,8 @@ WHERE id = $1
 `
 
 type UpdateStockQuantityParams struct {
-	ID       int64          `json:"id"`
-	Quantity sql.NullString `json:"quantity"`
+	ID       int64  `json:"id"`
+	Quantity string `json:"quantity"`
 }
 
 func (q *Queries) UpdateStockQuantity(ctx context.Context, arg UpdateStockQuantityParams) error {

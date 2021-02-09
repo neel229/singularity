@@ -5,7 +5,7 @@ package db
 
 import (
 	"context"
-	"database/sql"
+	"time"
 )
 
 const createReport = `-- name: CreateReport :one
@@ -26,16 +26,16 @@ INSERT INTO report (
 `
 
 type CreateReportParams struct {
-	TradingDate sql.NullTime   `json:"trading_date"`
-	StockID     sql.NullInt64  `json:"stock_id"`
-	CurrencyID  sql.NullInt32  `json:"currency_id"`
-	FirstPrice  sql.NullString `json:"first_price"`
-	LastPrice   sql.NullString `json:"last_price"`
-	MinPrice    sql.NullString `json:"min_price"`
-	MaxPrice    sql.NullString `json:"max_price"`
-	AvgPrice    sql.NullString `json:"avg_price"`
-	TotalAmount sql.NullString `json:"total_amount"`
-	Volume      sql.NullString `json:"volume"`
+	TradingDate time.Time `json:"trading_date"`
+	StockID     int64     `json:"stock_id"`
+	CurrencyID  int32     `json:"currency_id"`
+	FirstPrice  string    `json:"first_price"`
+	LastPrice   string    `json:"last_price"`
+	MinPrice    string    `json:"min_price"`
+	MaxPrice    string    `json:"max_price"`
+	AvgPrice    string    `json:"avg_price"`
+	TotalAmount string    `json:"total_amount"`
+	Volume      string    `json:"volume"`
 }
 
 func (q *Queries) CreateReport(ctx context.Context, arg CreateReportParams) (Report, error) {

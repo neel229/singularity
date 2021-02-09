@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createOffer = `-- name: CreateOffer :one
@@ -22,12 +21,12 @@ INSERT INTO offer (
 `
 
 type CreateOfferParams struct {
-	TraderID sql.NullInt64  `json:"trader_id"`
-	StockID  sql.NullInt64  `json:"stock_id"`
-	Quantity sql.NullString `json:"quantity"`
-	Buy      sql.NullBool   `json:"buy"`
-	Sell     sql.NullBool   `json:"sell"`
-	Price    sql.NullString `json:"price"`
+	TraderID int64  `json:"trader_id"`
+	StockID  int64  `json:"stock_id"`
+	Quantity string `json:"quantity"`
+	Buy      bool   `json:"buy"`
+	Sell     bool   `json:"sell"`
+	Price    string `json:"price"`
 }
 
 func (q *Queries) CreateOffer(ctx context.Context, arg CreateOfferParams) (Offer, error) {
@@ -84,9 +83,9 @@ OFFSET $3
 `
 
 type ListOffersParams struct {
-	TraderID sql.NullInt64 `json:"trader_id"`
-	Limit    int32         `json:"limit"`
-	Offset   int32         `json:"offset"`
+	TraderID int64 `json:"trader_id"`
+	Limit    int32 `json:"limit"`
+	Offset   int32 `json:"offset"`
 }
 
 func (q *Queries) ListOffers(ctx context.Context, arg ListOffersParams) ([]Offer, error) {

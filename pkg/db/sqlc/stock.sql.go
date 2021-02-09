@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createStock = `-- name: CreateStock :one
@@ -19,9 +18,9 @@ INSERT INTO stock (
 `
 
 type CreateStockParams struct {
-	Ticker    sql.NullString `json:"ticker"`
-	CreatorID sql.NullInt64  `json:"creator_id"`
-	Details   sql.NullString `json:"details"`
+	Ticker    string `json:"ticker"`
+	CreatorID int64  `json:"creator_id"`
+	Details   string `json:"details"`
 }
 
 func (q *Queries) CreateStock(ctx context.Context, arg CreateStockParams) (Stock, error) {
@@ -111,8 +110,8 @@ WHERE id = $1
 `
 
 type UpdateStockParams struct {
-	ID      int64          `json:"id"`
-	Details sql.NullString `json:"details"`
+	ID      int64  `json:"id"`
+	Details string `json:"details"`
 }
 
 func (q *Queries) UpdateStock(ctx context.Context, arg UpdateStockParams) error {

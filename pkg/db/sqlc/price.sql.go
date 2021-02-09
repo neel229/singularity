@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createPrice = `-- name: CreatePrice :one
@@ -20,10 +19,10 @@ INSERT INTO price (
 `
 
 type CreatePriceParams struct {
-	StockID    sql.NullInt64  `json:"stock_id"`
-	CurrencyID sql.NullInt32  `json:"currency_id"`
-	Buy        sql.NullString `json:"buy"`
-	Sell       sql.NullString `json:"sell"`
+	StockID    int64  `json:"stock_id"`
+	CurrencyID int32  `json:"currency_id"`
+	Buy        string `json:"buy"`
+	Sell       string `json:"sell"`
 }
 
 func (q *Queries) CreatePrice(ctx context.Context, arg CreatePriceParams) (Price, error) {
@@ -82,8 +81,8 @@ WHERE id = $1
 `
 
 type UpdateBuyingPriceParams struct {
-	ID  int64          `json:"id"`
-	Buy sql.NullString `json:"buy"`
+	ID  int64  `json:"id"`
+	Buy string `json:"buy"`
 }
 
 func (q *Queries) UpdateBuyingPrice(ctx context.Context, arg UpdateBuyingPriceParams) error {
@@ -98,8 +97,8 @@ WHERE id = $1
 `
 
 type UpdateSellingPriceParams struct {
-	ID   int64          `json:"id"`
-	Sell sql.NullString `json:"sell"`
+	ID   int64  `json:"id"`
+	Sell string `json:"sell"`
 }
 
 func (q *Queries) UpdateSellingPrice(ctx context.Context, arg UpdateSellingPriceParams) error {

@@ -5,7 +5,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createVirginTrade = `-- name: CreateVirginTrade :one
@@ -23,13 +22,13 @@ INSERT INTO virgin_trade (
 `
 
 type CreateVirginTradeParams struct {
-	StockID       sql.NullInt64  `json:"stock_id"`
-	CreatorID     sql.NullInt64  `json:"creator_id"`
-	BuyerID       sql.NullInt64  `json:"buyer_id"`
-	Quantity      sql.NullString `json:"quantity"`
-	UnitPrice     sql.NullString `json:"unit_price"`
-	Details       sql.NullString `json:"details"`
-	VirginOfferID sql.NullInt64  `json:"virgin_offer_id"`
+	StockID       int64  `json:"stock_id"`
+	CreatorID     int64  `json:"creator_id"`
+	BuyerID       int64  `json:"buyer_id"`
+	Quantity      string `json:"quantity"`
+	UnitPrice     string `json:"unit_price"`
+	Details       string `json:"details"`
+	VirginOfferID int64  `json:"virgin_offer_id"`
 }
 
 func (q *Queries) CreateVirginTrade(ctx context.Context, arg CreateVirginTradeParams) (VirginTrade, error) {
@@ -86,9 +85,9 @@ OFFSET $3
 `
 
 type ListVirginTradesByCreatorParams struct {
-	CreatorID sql.NullInt64 `json:"creator_id"`
-	Limit     int32         `json:"limit"`
-	Offset    int32         `json:"offset"`
+	CreatorID int64 `json:"creator_id"`
+	Limit     int32 `json:"limit"`
+	Offset    int32 `json:"offset"`
 }
 
 func (q *Queries) ListVirginTradesByCreator(ctx context.Context, arg ListVirginTradesByCreatorParams) ([]VirginTrade, error) {
@@ -131,9 +130,9 @@ OFFSET $3
 `
 
 type ListVirginTradesByFanParams struct {
-	BuyerID sql.NullInt64 `json:"buyer_id"`
-	Limit   int32         `json:"limit"`
-	Offset  int32         `json:"offset"`
+	BuyerID int64 `json:"buyer_id"`
+	Limit   int32 `json:"limit"`
+	Offset  int32 `json:"offset"`
 }
 
 func (q *Queries) ListVirginTradesByFan(ctx context.Context, arg ListVirginTradesByFanParams) ([]VirginTrade, error) {
