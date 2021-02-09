@@ -107,6 +107,7 @@ const updateCurrency = `-- name: UpdateCurrency :exec
 UPDATE currency
 SET is_base = $2
 WHERE id = $1
+RETURNING id, code, name, is_base
 `
 
 type UpdateCurrencyParams struct {

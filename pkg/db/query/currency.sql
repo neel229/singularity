@@ -21,7 +21,8 @@ OFFSET $2;
 -- name: UpdateCurrency :exec
 UPDATE currency
 SET is_base = $2
-WHERE id = $1;
+WHERE id = $1
+RETURNING *;
 
 -- name: DeleteCurrency :exec
 DELETE FROM currency
