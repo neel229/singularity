@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -10,13 +9,12 @@ import (
 
 func TestCreateCreator(t *testing.T) {
 	arg := CreateCreatorParams{
-		FirstName:           "David",
-		LastName:            "Dobrik",
-		UserName:            "daviddobrik",
+		FirstName:           "Logan",
+		LastName:            "Paul",
+		UserName:            "loganpaul",
 		Email:               "djfksdjfk",
 		Password:            "dfjskfjsd",
 		PreferredCurrencyID: 2,
-		CreatorStockID:      sql.NullInt64{Int64: 1, Valid: true},
 		VirginTokensLeft:    100000,
 	}
 
@@ -30,7 +28,6 @@ func TestCreateCreator(t *testing.T) {
 	require.Equal(t, arg.Email, creator.Email)
 	require.Equal(t, arg.Password, creator.Password)
 	require.Equal(t, arg.PreferredCurrencyID, creator.PreferredCurrencyID)
-	require.Equal(t, arg.CreatorStockID, creator.CreatorStockID)
 	require.Equal(t, arg.VirginTokensLeft, creator.VirginTokensLeft)
 
 	require.NotZero(t, creator.TimeConfirmed)

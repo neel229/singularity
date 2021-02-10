@@ -13,14 +13,19 @@ type Creator struct {
 	LastName  string `json:"last_name"`
 	UserName  string `json:"user_name"`
 	// Should be 64 based encoded value
-	Password            string        `json:"password"`
-	Email               string        `json:"email"`
-	TimeRegistered      time.Time     `json:"time_registered"`
-	TimeConfirmed       time.Time     `json:"time_confirmed"`
-	PreferredCurrencyID int32         `json:"preferred_currency_id"`
-	CreatorStockID      sql.NullInt64 `json:"creator_stock_id"`
+	Password            string    `json:"password"`
+	Email               string    `json:"email"`
+	TimeRegistered      time.Time `json:"time_registered"`
+	TimeConfirmed       time.Time `json:"time_confirmed"`
+	PreferredCurrencyID int32     `json:"preferred_currency_id"`
 	// Number of stocks the creator owns of his/hers
 	VirginTokensLeft int32 `json:"virgin_tokens_left"`
+}
+
+type CreatorStock struct {
+	ID        int64         `json:"id"`
+	CreatorID sql.NullInt64 `json:"creator_id"`
+	StockID   sql.NullInt64 `json:"stock_id"`
 }
 
 type Currency struct {

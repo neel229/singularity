@@ -18,9 +18,9 @@ func createRandomCurrencyRate(t *testing.T) CurrencyRate {
 	// }
 
 	arg := CreateCurrencyRateParams{
-		CurrencyID: 1,
+		CurrencyID:     3,
 		BaseCurrencyID: 2,
-		Rate: "20.000000",
+		Rate:           "20.000000",
 	}
 	currencyRate, err := testQueries.CreateCurrencyRate(context.Background(), arg)
 	require.NoError(t, err)
