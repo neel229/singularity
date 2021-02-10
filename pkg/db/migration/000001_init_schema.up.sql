@@ -120,7 +120,9 @@ ADD FOREIGN KEY ("preferred_currency_id") REFERENCES "currency" ("id");
 ALTER TABLE "creator"
 ADD FOREIGN KEY ("preferred_currency_id") REFERENCES "currency" ("id");
 ALTER TABLE "creator"
-ADD FOREIGN KEY ("id") REFERENCES "stock" ("id");
+ADD FOREIGN KEY ("creator_stock") REFERENCES "stock" ("id");
+ALTER TABLE "creator"
+ADD FOREIGN KEY ("id") REFERENCES "stock" ("creator_id");
 ALTER TABLE "price"
 ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
 ALTER TABLE "report"
