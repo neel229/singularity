@@ -1,12 +1,15 @@
 package util
 
 import (
+	"fmt"
 	"math/rand"
 	"strings"
 	"time"
 )
 
-const alphabets = "abcdefghijklmnopqrstuvwxyz"
+const (
+	alphabets = "abcdefghijklmnopqrstuvwxyz"
+)
 
 func init() {
 	rand.Seed(time.Now().UnixNano())
@@ -40,11 +43,39 @@ func RandomBool() bool {
 // RandomCurrencyCode generates a
 // random currency code
 func RandomCurrencyCode() string {
-	return RandomString(3)
+	currency_codes := []string{"USD", "ETH", "DAI", "USDC"}
+	k := len(currency_codes)
+	return currency_codes[rand.Intn(k)]
 }
 
 // RandomCurrencyName generates a
 // random currency name
-func RandomCurrencyName() string {
-	return RandomString(5)
+func CurrencyName(code string) string {
+	switch code {
+	case "USD":
+		return "United States Dollar"
+	case "ETH":
+		return "Ether"
+	case "DAI":
+		return "DAI"
+	case "USDC":
+		return "USDC"
+	default:
+		return fmt.Sprint("Currency code not matching any currency")
+	}
+}
+
+func IsBase(code string) bool {
+	switch code {
+	case "USD":
+		return false
+	case "ETH":
+		return true
+	case "DAI":
+		return true
+	case "USDC":
+		return true
+	default:
+		return false
+	}
 }
