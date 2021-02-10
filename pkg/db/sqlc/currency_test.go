@@ -59,11 +59,11 @@ func TestUpdateCurrency(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestDeletAccount(t *testing.T) {
-	err := testQueries.DeleteCurrency(context.Background(), 7)
+func TestDeleteAccount(t *testing.T) {
+	currency := createRandomCurrency(t)
+	err := testQueries.DeleteCurrency(context.Background(), currency.ID)
 	require.NoError(t, err)
-
-	currency1, err := testQueries.GetCurrency(context.Background(), 7)
+	currency1, err := testQueries.GetCurrency(context.Background(), currency.ID)
 	require.EqualError(t, err, sql.ErrNoRows.Error())
 	require.Empty(t, currency1)
 }
