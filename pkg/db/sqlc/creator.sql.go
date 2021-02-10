@@ -5,32 +5,33 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 const createCreator = `-- name: CreateCreator :one
 INSERT INTO creator (
-  first_name,
-  last_name,
-  user_name,
-  email,
-  password,
-  preferred_currency_id,
-  creator_stock,
-  virgin_tokens_left
-  ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7, $8
-) RETURNING id, first_name, last_name, user_name, password, email, time_registered, time_confirmed, preferred_currency_id, creator_stock, virgin_tokens_left
+    first_name,
+    last_name,
+    user_name,
+    email,
+    password,
+    preferred_currency_id,
+    creator_stock_id,
+    virgin_tokens_left
+  )
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+RETURNING id, first_name, last_name, user_name, password, email, time_registered, time_confirmed, preferred_currency_id, creator_stock_id, virgin_tokens_left
 `
 
 type CreateCreatorParams struct {
-	FirstName           string `json:"first_name"`
-	LastName            string `json:"last_name"`
-	UserName            string `json:"user_name"`
-	Email               string `json:"email"`
-	Password            string `json:"password"`
-	PreferredCurrencyID int32  `json:"preferred_currency_id"`
-	CreatorStock        int64  `json:"creator_stock"`
-	VirginTokensLeft    int32  `json:"virgin_tokens_left"`
+	FirstName           string        `json:"first_name"`
+	LastName            string        `json:"last_name"`
+	UserName            string        `json:"user_name"`
+	Email               string        `json:"email"`
+	Password            string        `json:"password"`
+	PreferredCurrencyID int32         `json:"preferred_currency_id"`
+	CreatorStockID      sql.NullInt64 `json:"creator_stock_id"`
+	VirginTokensLeft    int32         `json:"virgin_tokens_left"`
 }
 
 func (q *Queries) CreateCreator(ctx context.Context, arg CreateCreatorParams) (Creator, error) {
@@ -41,7 +42,7 @@ func (q *Queries) CreateCreator(ctx context.Context, arg CreateCreatorParams) (C
 		arg.Email,
 		arg.Password,
 		arg.PreferredCurrencyID,
-		arg.CreatorStock,
+		arg.CreatorStockID,
 		arg.VirginTokensLeft,
 	)
 	var i Creator
@@ -55,14 +56,15 @@ func (q *Queries) CreateCreator(ctx context.Context, arg CreateCreatorParams) (C
 		&i.TimeRegistered,
 		&i.TimeConfirmed,
 		&i.PreferredCurrencyID,
-		&i.CreatorStock,
+		&i.CreatorStockID,
 		&i.VirginTokensLeft,
 	)
 	return i, err
 }
 
 const getCreator = `-- name: GetCreator :one
-SELECT id, first_name, last_name, user_name, password, email, time_registered, time_confirmed, preferred_currency_id, creator_stock, virgin_tokens_left FROM creator
+SELECT id, first_name, last_name, user_name, password, email, time_registered, time_confirmed, preferred_currency_id, creator_stock_id, virgin_tokens_left
+FROM creator
 WHERE id = $1
 LIMIT 1
 `
@@ -80,14 +82,15 @@ func (q *Queries) GetCreator(ctx context.Context, id int64) (Creator, error) {
 		&i.TimeRegistered,
 		&i.TimeConfirmed,
 		&i.PreferredCurrencyID,
-		&i.CreatorStock,
+		&i.CreatorStockID,
 		&i.VirginTokensLeft,
 	)
 	return i, err
 }
 
 const getVirginTokensLeft = `-- name: GetVirginTokensLeft :one
-SELECT virgin_tokens_left FROM creator
+SELECT virgin_tokens_left
+FROM creator
 WHERE id = $1
 LIMIT 1
 `
@@ -100,10 +103,10 @@ func (q *Queries) GetVirginTokensLeft(ctx context.Context, id int64) (int32, err
 }
 
 const listCreators = `-- name: ListCreators :many
-SELECT id, first_name, last_name, user_name, password, email, time_registered, time_confirmed, preferred_currency_id, creator_stock, virgin_tokens_left FROM creator
+SELECT id, first_name, last_name, user_name, password, email, time_registered, time_confirmed, preferred_currency_id, creator_stock_id, virgin_tokens_left
+FROM creator
 ORDER BY id
-LIMIT $1
-OFFSET $2
+LIMIT $1 OFFSET $2
 `
 
 type ListCreatorsParams struct {
@@ -130,7 +133,7 @@ func (q *Queries) ListCreators(ctx context.Context, arg ListCreatorsParams) ([]C
 			&i.TimeRegistered,
 			&i.TimeConfirmed,
 			&i.PreferredCurrencyID,
-			&i.CreatorStock,
+			&i.CreatorStockID,
 			&i.VirginTokensLeft,
 		); err != nil {
 			return nil, err

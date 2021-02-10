@@ -8,30 +8,20 @@ import (
 )
 
 const createStock = `-- name: CreateStock :one
-INSERT INTO stock (
-  ticker,
-  creator_id,
-  details
-  ) VALUES (
-  $1, $2, $3
-) RETURNING id, ticker, creator_id, details
+INSERT INTO stock (ticker, details)
+VALUES ($1, $2)
+RETURNING id, ticker, details
 `
 
 type CreateStockParams struct {
-	Ticker    string `json:"ticker"`
-	CreatorID int64  `json:"creator_id"`
-	Details   string `json:"details"`
+	Ticker  string `json:"ticker"`
+	Details string `json:"details"`
 }
 
 func (q *Queries) CreateStock(ctx context.Context, arg CreateStockParams) (Stock, error) {
-	row := q.db.QueryRowContext(ctx, createStock, arg.Ticker, arg.CreatorID, arg.Details)
+	row := q.db.QueryRowContext(ctx, createStock, arg.Ticker, arg.Details)
 	var i Stock
-	err := row.Scan(
-		&i.ID,
-		&i.Ticker,
-		&i.CreatorID,
-		&i.Details,
-	)
+	err := row.Scan(&i.ID, &i.Ticker, &i.Details)
 	return i, err
 }
 
@@ -46,7 +36,8 @@ func (q *Queries) DeleteStock(ctx context.Context, id int64) error {
 }
 
 const getStock = `-- name: GetStock :one
-SELECT id, ticker, creator_id, details FROM stock
+SELECT id, ticker, details
+FROM stock
 WHERE id = $1
 LIMIT 1
 `
@@ -54,20 +45,15 @@ LIMIT 1
 func (q *Queries) GetStock(ctx context.Context, id int64) (Stock, error) {
 	row := q.db.QueryRowContext(ctx, getStock, id)
 	var i Stock
-	err := row.Scan(
-		&i.ID,
-		&i.Ticker,
-		&i.CreatorID,
-		&i.Details,
-	)
+	err := row.Scan(&i.ID, &i.Ticker, &i.Details)
 	return i, err
 }
 
 const listStocks = `-- name: ListStocks :many
-SELECT id, ticker, creator_id, details FROM stock
+SELECT id, ticker, details
+FROM stock
 ORDER BY id
-LIMIT $1
-OFFSET $2
+LIMIT $1 OFFSET $2
 `
 
 type ListStocksParams struct {
@@ -84,12 +70,7 @@ func (q *Queries) ListStocks(ctx context.Context, arg ListStocksParams) ([]Stock
 	var items []Stock
 	for rows.Next() {
 		var i Stock
-		if err := rows.Scan(
-			&i.ID,
-			&i.Ticker,
-			&i.CreatorID,
-			&i.Details,
-		); err != nil {
+		if err := rows.Scan(&i.ID, &i.Ticker, &i.Details); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -105,7 +86,7 @@ func (q *Queries) ListStocks(ctx context.Context, arg ListStocksParams) ([]Stock
 
 const updateStock = `-- name: UpdateStock :exec
 UPDATE stock
-SET details = $2 
+SET details = $2
 WHERE id = $1
 `
 

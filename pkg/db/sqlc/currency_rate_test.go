@@ -11,10 +11,16 @@ import (
 )
 
 func createRandomCurrencyRate(t *testing.T) CurrencyRate {
+	// arg := CreateCurrencyRateParams{
+	// 	CurrencyID:     int32(util.RandomInt(1, 5)),
+	// 	BaseCurrencyID: int32(util.RandomInt(2, 7)),
+	// 	Rate:           strconv.Itoa(int(util.RandomInt(20, 100))) + ".000000",
+	// }
+
 	arg := CreateCurrencyRateParams{
-		CurrencyID:     int32(util.RandomInt(1, 5)),
-		BaseCurrencyID: int32(util.RandomInt(2, 7)),
-		Rate:           strconv.Itoa(int(util.RandomInt(20, 100))) + ".000000",
+		CurrencyID: 1,
+		BaseCurrencyID: 2,
+		Rate: "20.000000",
 	}
 	currencyRate, err := testQueries.CreateCurrencyRate(context.Background(), arg)
 	require.NoError(t, err)

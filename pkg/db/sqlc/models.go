@@ -3,6 +3,7 @@
 package db
 
 import (
+	"database/sql"
 	"time"
 )
 
@@ -12,12 +13,12 @@ type Creator struct {
 	LastName  string `json:"last_name"`
 	UserName  string `json:"user_name"`
 	// Should be 64 based encoded value
-	Password            string    `json:"password"`
-	Email               string    `json:"email"`
-	TimeRegistered      time.Time `json:"time_registered"`
-	TimeConfirmed       time.Time `json:"time_confirmed"`
-	PreferredCurrencyID int32     `json:"preferred_currency_id"`
-	CreatorStock        int64     `json:"creator_stock"`
+	Password            string        `json:"password"`
+	Email               string        `json:"email"`
+	TimeRegistered      time.Time     `json:"time_registered"`
+	TimeConfirmed       time.Time     `json:"time_confirmed"`
+	PreferredCurrencyID int32         `json:"preferred_currency_id"`
+	CreatorStockID      sql.NullInt64 `json:"creator_stock_id"`
 	// Number of stocks the creator owns of his/hers
 	VirginTokensLeft int32 `json:"virgin_tokens_left"`
 }
@@ -93,10 +94,9 @@ type Report struct {
 }
 
 type Stock struct {
-	ID        int64  `json:"id"`
-	Ticker    string `json:"ticker"`
-	CreatorID int64  `json:"creator_id"`
-	Details   string `json:"details"`
+	ID      int64  `json:"id"`
+	Ticker  string `json:"ticker"`
+	Details string `json:"details"`
 }
 
 type Trade struct {
