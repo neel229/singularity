@@ -10,10 +10,13 @@ import (
 )
 
 func createRandomCurrency(t *testing.T) Currency {
+	code := util.RandomCurrencyCode()
+	name := util.CurrencyName(code)
+	isBase := util.IsBase(code)
 	arg := CreateCurrencyParams{
-		Code:   util.RandomCurrencyCode(),
-		Name:   util.RandomCurrencyName(),
-		IsBase: util.RandomBool(),
+		Code:   code,
+		Name:   name,
+		IsBase: isBase,
 	}
 	currency, err := testQueries.CreateCurrency(context.Background(), arg)
 
