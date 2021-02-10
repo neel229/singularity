@@ -14,7 +14,6 @@ CREATE TABLE "currency_rate" (
 CREATE TABLE "stock" (
   "id" bigserial PRIMARY KEY,
   "ticker" varchar(8) NOT NULL,
-  "creator_id" bigserial NOT NULL,
   "details" text NOT NULL
 );
 CREATE TABLE "price" (
@@ -59,7 +58,7 @@ CREATE TABLE "creator" (
   "time_registered" timestamptz NOT NULL DEFAULT (now()),
   "time_confirmed" timestamptz NOT NULL DEFAULT (now()),
   "preferred_currency_id" int NOT NULL,
-  "creator_stock" bigserial NOT NULL,
+  "creator_stock_id" bigserial,
   "virgin_tokens_left" int NOT NULL
 );
 CREATE TABLE "portfolio" (
@@ -120,15 +119,15 @@ ADD FOREIGN KEY ("preferred_currency_id") REFERENCES "currency" ("id");
 ALTER TABLE "creator"
 ADD FOREIGN KEY ("preferred_currency_id") REFERENCES "currency" ("id");
 ALTER TABLE "creator"
-ADD FOREIGN KEY ("creator_stock") REFERENCES "stock" ("id");
-ALTER TABLE "creator"
-ADD FOREIGN KEY ("id") REFERENCES "stock" ("creator_id");
+ADD FOREIGN KEY ("creator_stock_id") REFERENCES "stock" ("id");
 ALTER TABLE "price"
 ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
 ALTER TABLE "report"
 ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
 ALTER TABLE "trade"
 ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
+-- ALTER TABLE "stock"
+-- ADD FOREIGN KEY ("id") REFERENCES "creator" ("creator_stock_id");
 ALTER TABLE "offer"
 ADD FOREIGN KEY ("trader_id") REFERENCES "creator" ("id");
 ALTER TABLE "portfolio"
