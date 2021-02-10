@@ -1,1 +1,2 @@
+# For migrating db schema
 ./migrate
