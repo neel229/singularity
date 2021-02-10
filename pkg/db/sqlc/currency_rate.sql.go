@@ -8,13 +8,8 @@ import (
 )
 
 const createCurrencyRate = `-- name: CreateCurrencyRate :one
-INSERT INTO currency_rate (
-  currency_id,
-  base_currency_id,
-  rate
-) VALUES (
-  $1, $2, $3
-)
+INSERT INTO currency_rate (currency_id, base_currency_id, rate)
+VALUES ($1, $2, $3)
 RETURNING id, currency_id, base_currency_id, rate, ts
 `
 
@@ -38,7 +33,8 @@ func (q *Queries) CreateCurrencyRate(ctx context.Context, arg CreateCurrencyRate
 }
 
 const getCurrencyRate = `-- name: GetCurrencyRate :one
-SELECT id, currency_id, base_currency_id, rate, ts FROM currency_rate
+SELECT id, currency_id, base_currency_id, rate, ts
+FROM currency_rate
 WHERE id = $1
 LIMIT 1
 `
@@ -60,6 +56,7 @@ const updateCurrencyRate = `-- name: UpdateCurrencyRate :exec
 UPDATE currency_rate
 SET rate = $2
 WHERE id = $1
+RETURNING id, currency_id, base_currency_id, rate, ts
 `
 
 type UpdateCurrencyRateParams struct {
