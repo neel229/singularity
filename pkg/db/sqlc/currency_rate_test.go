@@ -18,11 +18,7 @@ func createRandomCurrencyRate(t *testing.T) CurrencyRate {
 	// }
 
 	arg := CreateCurrencyRateParams{
-<<<<<<< HEAD
-		CurrencyID:     3,
-=======
 		CurrencyID:     1,
->>>>>>> unit_tests
 		BaseCurrencyID: 2,
 		Rate:           "20.000000",
 	}

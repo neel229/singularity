@@ -62,13 +62,8 @@ CREATE TABLE "creator" (
 );
 CREATE TABLE "creator_stock" (
   "id" bigserial PRIMARY KEY,
-<<<<<<< HEAD
-  "creator_id" bigserial,
-  "stock_id" bigserial
-=======
   "creator_id" bigserial NOT NULL,
   "stock_id" bigserial NOT NULL
->>>>>>> unit_tests
 );
 CREATE TABLE "portfolio" (
   "id" bigserial PRIMARY KEY,
