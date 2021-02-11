@@ -18,9 +18,9 @@ func createRandomCurrencyRate(t *testing.T) CurrencyRate {
 	// }
 
 	arg := CreateCurrencyRateParams{
-		CurrencyID: 1,
+		CurrencyID:     1,
 		BaseCurrencyID: 2,
-		Rate: "20.000000",
+		Rate:           "20.000000",
 	}
 	currencyRate, err := testQueries.CreateCurrencyRate(context.Background(), arg)
 	require.NoError(t, err)
@@ -57,7 +57,7 @@ func TestUpdateCurrencyRate(t *testing.T) {
 	currencyRate1 := createRandomCurrencyRate(t)
 	arg := UpdateCurrencyRateParams{
 		ID:   currencyRate1.ID,
-		Rate: strconv.Itoa(int(util.RandomInt(20, 100))) + ".000000",
+		Rate: strconv.Itoa(int(util.RandomInt(40, 100))) + ".000000",
 	}
 	err := testQueries.UpdateCurrencyRate(context.Background(), arg)
 	require.NoError(t, err)
