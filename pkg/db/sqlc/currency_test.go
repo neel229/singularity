@@ -78,11 +78,11 @@ func TestListCurrencies(t *testing.T) {
 		Offset: 5,
 	}
 
-	accounts, err := testQueries.ListCurrencies(context.Background(), arg)
+	currencies, err := testQueries.ListCurrencies(context.Background(), arg)
 	require.NoError(t, err)
-	require.Len(t, accounts, 5)
+	require.Len(t, currencies, 5)
 
-	for _, account := range accounts {
-		require.NotEmpty(t, account)
+	for _, currency := range currencies {
+		require.NotEmpty(t, currency)
 	}
 }

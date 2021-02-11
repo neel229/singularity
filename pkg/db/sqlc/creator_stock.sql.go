@@ -38,3 +38,38 @@ func (q *Queries) GetCreatorStock(ctx context.Context, id int64) (CreatorStock, 
 	err := row.Scan(&i.ID, &i.CreatorID, &i.StockID)
 	return i, err
 }
+
+const listCreatorStocks = `-- name: ListCreatorStocks :many
+SELECT id, creator_id, stock_id
+FROM creator_stock
+ORDER BY id
+LIMIT $1 OFFSET $2
+`
+
+type ListCreatorStocksParams struct {
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
+}
+
+func (q *Queries) ListCreatorStocks(ctx context.Context, arg ListCreatorStocksParams) ([]CreatorStock, error) {
+	rows, err := q.db.QueryContext(ctx, listCreatorStocks, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []CreatorStock
+	for rows.Next() {
+		var i CreatorStock
+		if err := rows.Scan(&i.ID, &i.CreatorID, &i.StockID); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
