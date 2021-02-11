@@ -9,8 +9,8 @@ import (
 
 func TestCreateStock(t *testing.T) {
 	arg := CreateStockParams{
-		Ticker:  "David",
-		Details: "Token of David Dobrik",
+		Ticker:  "LPT",
+		Details: "Token of Logan Paul",
 	}
 
 	stock, err := testQueries.CreateStock(context.Background(), arg)

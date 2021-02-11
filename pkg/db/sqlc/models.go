@@ -3,7 +3,6 @@
 package db
 
 import (
-	"database/sql"
 	"time"
 )
 
@@ -23,9 +22,15 @@ type Creator struct {
 }
 
 type CreatorStock struct {
+<<<<<<< HEAD
 	ID        int64         `json:"id"`
 	CreatorID sql.NullInt64 `json:"creator_id"`
 	StockID   sql.NullInt64 `json:"stock_id"`
+=======
+	ID        int64 `json:"id"`
+	CreatorID int64 `json:"creator_id"`
+	StockID   int64 `json:"stock_id"`
+>>>>>>> unit_tests
 }
 
 type Currency struct {

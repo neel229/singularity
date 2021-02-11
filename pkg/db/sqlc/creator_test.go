@@ -14,7 +14,11 @@ func TestCreateCreator(t *testing.T) {
 		UserName:            "loganpaul",
 		Email:               "djfksdjfk",
 		Password:            "dfjskfjsd",
+<<<<<<< HEAD
 		PreferredCurrencyID: 2,
+=======
+		PreferredCurrencyID: 3,
+>>>>>>> unit_tests
 		VirginTokensLeft:    100000,
 	}
 
