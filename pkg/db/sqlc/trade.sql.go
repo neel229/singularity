@@ -7,21 +7,21 @@ import (
 	"context"
 )
 
-const creatorTrade = `-- name: CreatorTrade :one
+const createTrade = `-- name: CreateTrade :one
 INSERT INTO trade (
-  stock_id,
-  buyer_id,
-  seller_id,
-  quantity,
-  unit_price,
-  details,
-  offer_id
-  ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7
-) RETURNING id, stock_id, buyer_id, seller_id, quantity, unit_price, details, offer_id
+    stock_id,
+    buyer_id,
+    seller_id,
+    quantity,
+    unit_price,
+    details,
+    offer_id
+  )
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING id, stock_id, buyer_id, seller_id, quantity, unit_price, details, offer_id
 `
 
-type CreatorTradeParams struct {
+type CreateTradeParams struct {
 	StockID   int64  `json:"stock_id"`
 	BuyerID   int64  `json:"buyer_id"`
 	SellerID  int64  `json:"seller_id"`
@@ -31,8 +31,8 @@ type CreatorTradeParams struct {
 	OfferID   int64  `json:"offer_id"`
 }
 
-func (q *Queries) CreatorTrade(ctx context.Context, arg CreatorTradeParams) (Trade, error) {
-	row := q.db.QueryRowContext(ctx, creatorTrade,
+func (q *Queries) CreateTrade(ctx context.Context, arg CreateTradeParams) (Trade, error) {
+	row := q.db.QueryRowContext(ctx, createTrade,
 		arg.StockID,
 		arg.BuyerID,
 		arg.SellerID,
@@ -56,7 +56,8 @@ func (q *Queries) CreatorTrade(ctx context.Context, arg CreatorTradeParams) (Tra
 }
 
 const getTrade = `-- name: GetTrade :one
-SELECT id, stock_id, buyer_id, seller_id, quantity, unit_price, details, offer_id FROM trade
+SELECT id, stock_id, buyer_id, seller_id, quantity, unit_price, details, offer_id
+FROM trade
 WHERE id = $1
 LIMIT 1
 `
@@ -78,11 +79,11 @@ func (q *Queries) GetTrade(ctx context.Context, id int64) (Trade, error) {
 }
 
 const getTradesByBuyer = `-- name: GetTradesByBuyer :many
-SELECT id, stock_id, buyer_id, seller_id, quantity, unit_price, details, offer_id FROM trade
+SELECT id, stock_id, buyer_id, seller_id, quantity, unit_price, details, offer_id
+FROM trade
 WHERE buyer_id = $1
 ORDER BY id
-LIMIT $2
-OFFSET $3
+LIMIT $2 OFFSET $3
 `
 
 type GetTradesByBuyerParams struct {
@@ -124,11 +125,11 @@ func (q *Queries) GetTradesByBuyer(ctx context.Context, arg GetTradesByBuyerPara
 }
 
 const getTradesBySeller = `-- name: GetTradesBySeller :many
-SELECT id, stock_id, buyer_id, seller_id, quantity, unit_price, details, offer_id FROM trade
+SELECT id, stock_id, buyer_id, seller_id, quantity, unit_price, details, offer_id
+FROM trade
 WHERE seller_id = $1
 ORDER BY id
-LIMIT $2
-OFFSET $3
+LIMIT $2 OFFSET $3
 `
 
 type GetTradesBySellerParams struct {
