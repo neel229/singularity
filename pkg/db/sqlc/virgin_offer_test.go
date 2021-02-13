@@ -9,7 +9,7 @@ import (
 
 func createRandomVirginOffers(t *testing.T) VirginOffer {
 	arg := CreateVirginOfferParams{
-		CreatorID: 3,
+		CreatorID: 1,
 		StockID:   1,
 		Quantity:  "1.000000",
 		Price:     "69.420000",

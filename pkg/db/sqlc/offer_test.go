@@ -9,7 +9,7 @@ import (
 
 func createRandomOffers(t *testing.T) Offer {
 	arg := CreateOfferParams{
-		TraderID: 3,
+		TraderID: 1,
 		StockID:  1,
 		Quantity: "1.000000",
 		Buy:      true,

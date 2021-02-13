@@ -60,7 +60,7 @@ func TestListVirginTradesByCreator(t *testing.T) {
 		createRandomVirginTrades(t)
 	}
 	arg := ListVirginTradesByCreatorParams{
-		CreatorID: 1,
+		CreatorID: 2,
 		Limit:     5,
 		Offset:    5,
 	}
