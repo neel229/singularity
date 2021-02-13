@@ -6,10 +6,9 @@ INSERT INTO creator (
     email,
     password,
     preferred_currency_id,
-    creator_stock_id,
     virgin_tokens_left
   )
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING *;
 -- name: GetCreator :one
 SELECT *
