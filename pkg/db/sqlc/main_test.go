@@ -17,16 +17,18 @@ const (
 // We will use testQueries throughout our application
 // for testing the db queries
 var testQueries *Queries
+var testDB *sql.DB
 
 // Entry test where we setup DB connection
 // for testing
 func TestMain(m *testing.M) {
-	conn, err := sql.Open(driverName, dataSource)
+	var err error
+	testDB, err = sql.Open(driverName, dataSource)
 	if err != nil {
 		log.Fatalf("There was an error connecting the database: %v", err)
 	}
 
-	testQueries = New(conn)
+	testQueries = New(testDB)
 
 	os.Exit(m.Run())
 }

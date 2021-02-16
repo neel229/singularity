@@ -39,50 +39,125 @@ func (s *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
 	return tx.Commit()
 }
 
-// VTradeTransactionParams contains the
-// necessery input params
-type VTradeTransactionParams struct {
-	CreatorID int64  `json:"creator_id"`
-	FanID     int64  `json:"fan_id"`
-	StockID   int64  `json:"stock_id"`
-	Quantity  string `json:"quantity"`
-	UnitPrice string `json:"unit_price"`
-	// VirginOfferID int64  `json:"virgin_offer_id"`
+// StockCreationTxParams is a struct
+// which holds input data to create a creator
+// account and it's corresponding stock
+type StockCreationTxParams struct {
+	FirstName           string `json:"first_name"`
+	LastName            string `json:"last_name"`
+	UserName            string `json:"user_name"`
+	Email               string `json:"email"`
+	Password            string `json:"password"`
+	PreferredCurrencyID int32  `json:"preferred_currency_id"`
+	Ticker              string `json:"ticker"`
+	Details             string `json:"details"`
 }
 
-// VTradeTransactionResult contains the
-// fields which will be changed after the
-// transaction.
-type VTradeTransactionResult struct {
-	VTrade     VirginTrade `json:"virgin_trade"`
-	CAccount   Creator     `json:"creator_account"`
-	CPortfolio Portfolio   `json:"creator_portfolio"`
-	FPortfolio Portfolio   `json:"fan_portfolio"`
+// StockCreationTxResults contains
+// a Creator account, corresponding Stock
+// and CreatorStock
+type StockCreationTxResults struct {
+	Creator      Creator      `json:"creator"`
+	Stock        Stock        `json:"stock"`
+	CreatorStock CreatorStock `json:"creator_stock"`
 }
 
-// VTradeTransaction performs a stock trade
-// from a creator's account to a fan account.
-func (s *Store) VTradeTransaction(ctx context.Context, arg VTradeTransactionParams) (VTradeTransactionResult, error) {
-	var result VTradeTransactionResult
+// StockCreationTx is a db transaction
+// in which we create a creator's id
+// followed by a corresponding stock
+func (s *Store) StockCreationTx(ctx context.Context, arg StockCreationTxParams) (StockCreationTxResults, error) {
+	var result StockCreationTxResults
 
 	err := s.execTx(ctx, func(q *Queries) error {
 		var err error
-		vOffer, _ := q.GetVirginOfferByCreator(ctx, arg.CreatorID) // Get the virgin offer using creator id.
-		arg1 := CreateVirginTradeParams{
-			StockID:       arg.StockID,
-			CreatorID:     arg.CreatorID,
-			BuyerID:       arg.FanID,
-			Quantity:      arg.Quantity,
-			UnitPrice:     arg.UnitPrice,
-			Details:       "",
-			VirginOfferID: vOffer.ID,
+
+		// Create a creator account
+		arg1 := CreateCreatorParams{
+			FirstName:           arg.FirstName,
+			LastName:            arg.LastName,
+			UserName:            arg.UserName,
+			Email:               arg.Email,
+			Password:            arg.Password,
+			PreferredCurrencyID: arg.PreferredCurrencyID,
+			VirginTokensLeft:    10000000,
 		}
-		result.VTrade, err = q.CreateVirginTrade(ctx, arg1)
+		result.Creator, err = q.CreateCreator(ctx, arg1)
 		if err != nil {
 			return err
 		}
+
+		// Create a creator's stock
+		arg2 := CreateStockParams{
+			Ticker:  arg.Ticker,
+			Details: arg.Details,
+		}
+		result.Stock, err = q.CreateStock(ctx, arg2)
+		if err != nil {
+			return err
+		}
+
+		// Create an entry in  creator stock table
+		// with creatorID and stockID from above two
+		// queries
+		arg3 := CreateCreatorStockParams{
+			CreatorID: result.Creator.ID,
+			StockID:   result.Stock.ID,
+		}
+		result.CreatorStock, err = q.CreateCreatorStock(ctx, arg3)
+		if err != nil {
+			return err
+		}
+
 		return nil
 	})
 
 	return result, err
 }
+
+// // VTradeTransactionParams contains the
+// // necessery input params
+// type VTradeTransactionParams struct {
+// 	CreatorID int64  `json:"creator_id"`
+// 	FanID     int64  `json:"fan_id"`
+// 	StockID   int64  `json:"stock_id"`
+// 	Quantity  string `json:"quantity"`
+// 	UnitPrice string `json:"unit_price"`
+// 	// VirginOfferID int64  `json:"virgin_offer_id"`
+// }
+
+// // VTradeTransactionResult contains the
+// // fields which will be changed after the
+// // transaction.
+// type VTradeTransactionResult struct {
+// 	VTrade     VirginTrade `json:"virgin_trade"`
+// 	CAccount   Creator     `json:"creator_account"`
+// 	CPortfolio Portfolio   `json:"creator_portfolio"`
+// 	FPortfolio Portfolio   `json:"fan_portfolio"`
+// }
+
+// // VTradeTransaction performs a stock trade
+// // from a creator's account to a fan account.
+// func (s *Store) VTradeTransaction(ctx context.Context, arg VTradeTransactionParams) (VTradeTransactionResult, error) {
+// 	var result VTradeTransactionResult
+
+// 	err := s.execTx(ctx, func(q *Queries) error {
+// 		var err error
+// 		vOffer, _ := q.GetVirginOfferByCreator(ctx, arg.CreatorID) // Get the virgin offer using creator id.
+// 		arg1 := CreateVirginTradeParams{
+// 			StockID:       arg.StockID,
+// 			CreatorID:     arg.CreatorID,
+// 			BuyerID:       arg.FanID,
+// 			Quantity:      arg.Quantity,
+// 			UnitPrice:     arg.UnitPrice,
+// 			Details:       "",
+// 			VirginOfferID: vOffer.ID,
+// 		}
+// 		result.VTrade, err = q.CreateVirginTrade(ctx, arg1)
+// 		if err != nil {
+// 			return err
+// 		}
+// 		return nil
+// 	})
+
+// 	return result, err
+// }
