@@ -1,16 +1,20 @@
 -- name: CreatePortfolio :one
 INSERT INTO portfolio (
-  fan_id,
-  creator_id,
+  trader_id,
   stock_id,
   quantity
   ) VALUES (
-  $1, $2, $3, $4
+  $1, $2, $3
 ) RETURNING *;
 
 -- name: GetPortfolio :one
 SELECT * FROM portfolio
 WHERE id = $1
+LIMIT 1;
+
+-- name: GetPortfolioByTraderID :one
+SELECT * FROM portfolio
+WHERE trader_id = $1
 LIMIT 1;
 
 -- name: UpdateStockQuantity :exec
