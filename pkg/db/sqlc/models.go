@@ -67,11 +67,10 @@ type Offer struct {
 }
 
 type Portfolio struct {
-	ID        int64  `json:"id"`
-	FanID     int64  `json:"fan_id"`
-	CreatorID int64  `json:"creator_id"`
-	StockID   int64  `json:"stock_id"`
-	Quantity  string `json:"quantity"`
+	ID       int64  `json:"id"`
+	TraderID int64  `json:"trader_id"`
+	StockID  int64  `json:"stock_id"`
+	Quantity string `json:"quantity"`
 }
 
 type Price struct {

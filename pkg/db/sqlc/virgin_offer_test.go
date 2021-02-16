@@ -32,9 +32,23 @@ func TestCreateVirginOffer(t *testing.T) {
 	createRandomVirginOffers(t)
 }
 
-func TestGetVirginOffers(t *testing.T) {
+func TestGetVirginOffer(t *testing.T) {
 	offer := createRandomVirginOffers(t)
 	offer1, err := testQueries.GetVirginOffer(context.Background(), offer.ID)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, offer1)
+
+	require.Equal(t, offer.CreatorID, offer1.CreatorID)
+	require.Equal(t, offer.StockID, offer1.StockID)
+	require.Equal(t, offer.Quantity, offer1.Quantity)
+	require.Equal(t, offer.Price, offer1.Price)
+
+	require.NotZero(t, offer1.ID)
+}
+func TestGetVirginOfferByCreator(t *testing.T) {
+	offer := createRandomVirginOffers(t)
+	offer1, err := testQueries.GetVirginOfferByCreator(context.Background(), offer.CreatorID)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, offer1)

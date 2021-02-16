@@ -9,34 +9,26 @@ import (
 
 const createPortfolio = `-- name: CreatePortfolio :one
 INSERT INTO portfolio (
-  fan_id,
-  creator_id,
+  trader_id,
   stock_id,
   quantity
   ) VALUES (
-  $1, $2, $3, $4
-) RETURNING id, fan_id, creator_id, stock_id, quantity
+  $1, $2, $3
+) RETURNING id, trader_id, stock_id, quantity
 `
 
 type CreatePortfolioParams struct {
-	FanID     int64  `json:"fan_id"`
-	CreatorID int64  `json:"creator_id"`
-	StockID   int64  `json:"stock_id"`
-	Quantity  string `json:"quantity"`
+	TraderID int64  `json:"trader_id"`
+	StockID  int64  `json:"stock_id"`
+	Quantity string `json:"quantity"`
 }
 
 func (q *Queries) CreatePortfolio(ctx context.Context, arg CreatePortfolioParams) (Portfolio, error) {
-	row := q.db.QueryRowContext(ctx, createPortfolio,
-		arg.FanID,
-		arg.CreatorID,
-		arg.StockID,
-		arg.Quantity,
-	)
+	row := q.db.QueryRowContext(ctx, createPortfolio, arg.TraderID, arg.StockID, arg.Quantity)
 	var i Portfolio
 	err := row.Scan(
 		&i.ID,
-		&i.FanID,
-		&i.CreatorID,
+		&i.TraderID,
 		&i.StockID,
 		&i.Quantity,
 	)
@@ -54,7 +46,7 @@ func (q *Queries) DeleteStockFromPortfolio(ctx context.Context, id int64) error 
 }
 
 const getPortfolio = `-- name: GetPortfolio :one
-SELECT id, fan_id, creator_id, stock_id, quantity FROM portfolio
+SELECT id, trader_id, stock_id, quantity FROM portfolio
 WHERE id = $1
 LIMIT 1
 `
@@ -64,8 +56,25 @@ func (q *Queries) GetPortfolio(ctx context.Context, id int64) (Portfolio, error)
 	var i Portfolio
 	err := row.Scan(
 		&i.ID,
-		&i.FanID,
-		&i.CreatorID,
+		&i.TraderID,
+		&i.StockID,
+		&i.Quantity,
+	)
+	return i, err
+}
+
+const getPortfolioByTraderID = `-- name: GetPortfolioByTraderID :one
+SELECT id, trader_id, stock_id, quantity FROM portfolio
+WHERE trader_id = $1
+LIMIT 1
+`
+
+func (q *Queries) GetPortfolioByTraderID(ctx context.Context, traderID int64) (Portfolio, error) {
+	row := q.db.QueryRowContext(ctx, getPortfolioByTraderID, traderID)
+	var i Portfolio
+	err := row.Scan(
+		&i.ID,
+		&i.TraderID,
 		&i.StockID,
 		&i.Quantity,
 	)

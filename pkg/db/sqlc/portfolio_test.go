@@ -9,17 +9,15 @@ import (
 
 func createRandomPortfolios(t *testing.T) Portfolio {
 	arg := CreatePortfolioParams{
-		FanID:     1,
-		CreatorID: 1,
-		StockID:   1,
-		Quantity:  "50.000000",
+		TraderID: 1,
+		StockID:  1,
+		Quantity: "50.000000",
 	}
 	portfolio, err := testQueries.CreatePortfolio(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, portfolio)
 
-	require.Equal(t, arg.FanID, portfolio.FanID)
-	require.Equal(t, arg.CreatorID, portfolio.CreatorID)
+	require.Equal(t, arg.TraderID, portfolio.TraderID)
 	require.Equal(t, arg.StockID, portfolio.StockID)
 	require.Equal(t, arg.Quantity, portfolio.Quantity)
 
@@ -38,8 +36,20 @@ func TestGetPortfolio(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, portfolio1)
 
-	require.Equal(t, portfolio.FanID, portfolio1.FanID)
-	require.Equal(t, portfolio.CreatorID, portfolio1.CreatorID)
+	require.Equal(t, portfolio.TraderID, portfolio1.TraderID)
+	require.Equal(t, portfolio.StockID, portfolio1.StockID)
+	require.Equal(t, portfolio.Quantity, portfolio1.Quantity)
+
+	require.NotZero(t, portfolio1.ID)
+}
+
+func TestGetPortfolioByTraderID(t *testing.T) {
+	portfolio := createRandomPortfolios(t)
+	portfolio1, err := testQueries.GetPortfolioByTraderID(context.Background(), portfolio.TraderID)
+	require.NoError(t, err)
+	require.NotEmpty(t, portfolio1)
+
+	require.Equal(t, portfolio.TraderID, portfolio1.TraderID)
 	require.Equal(t, portfolio.StockID, portfolio1.StockID)
 	require.Equal(t, portfolio.Quantity, portfolio1.Quantity)
 

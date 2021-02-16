@@ -9,13 +9,13 @@ import (
 
 const createVirginOffer = `-- name: CreateVirginOffer :one
 INSERT INTO virgin_offer (
-  creator_id,
-  stock_id,
-  quantity,
-  price
-  ) VALUES (
-  $1, $2, $3, $4
-) RETURNING id, creator_id, stock_id, quantity, price, ts
+    creator_id,
+    stock_id,
+    quantity,
+    price
+  )
+VALUES ($1, $2, $3, $4)
+RETURNING id, creator_id, stock_id, quantity, price, ts
 `
 
 type CreateVirginOfferParams struct {
@@ -45,7 +45,8 @@ func (q *Queries) CreateVirginOffer(ctx context.Context, arg CreateVirginOfferPa
 }
 
 const getVirginOffer = `-- name: GetVirginOffer :one
-SELECT id, creator_id, stock_id, quantity, price, ts FROM virgin_offer
+SELECT id, creator_id, stock_id, quantity, price, ts
+FROM virgin_offer
 WHERE id = $1
 LIMIT 1
 `
@@ -64,12 +65,33 @@ func (q *Queries) GetVirginOffer(ctx context.Context, id int64) (VirginOffer, er
 	return i, err
 }
 
+const getVirginOfferByCreator = `-- name: GetVirginOfferByCreator :one
+SELECT id, creator_id, stock_id, quantity, price, ts
+FROM virgin_offer
+WHERE creator_id = $1
+LIMIT 1
+`
+
+func (q *Queries) GetVirginOfferByCreator(ctx context.Context, creatorID int64) (VirginOffer, error) {
+	row := q.db.QueryRowContext(ctx, getVirginOfferByCreator, creatorID)
+	var i VirginOffer
+	err := row.Scan(
+		&i.ID,
+		&i.CreatorID,
+		&i.StockID,
+		&i.Quantity,
+		&i.Price,
+		&i.Ts,
+	)
+	return i, err
+}
+
 const listVirginOffers = `-- name: ListVirginOffers :many
-SELECT id, creator_id, stock_id, quantity, price, ts FROM virgin_offer
+SELECT id, creator_id, stock_id, quantity, price, ts
+FROM virgin_offer
 WHERE creator_id = $1
 ORDER BY id
-LIMIT $2
-OFFSET $3
+LIMIT $2 OFFSET $3
 `
 
 type ListVirginOffersParams struct {
