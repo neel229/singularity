@@ -57,9 +57,10 @@ type StockCreationTxParams struct {
 // a Creator account, corresponding Stock
 // and CreatorStock
 type StockCreationTxResults struct {
-	Creator      Creator      `json:"creator"`
-	Stock        Stock        `json:"stock"`
-	CreatorStock CreatorStock `json:"creator_stock"`
+	Creator      Creator          `json:"creator"`
+	Stock        Stock            `json:"stock"`
+	CreatorStock CreatorStock     `json:"creator_stock"`
+	CPortfolio   CreatorPortfolio `json:"creator_portfolioj"`
 }
 
 // StockCreationTx is a db transaction
@@ -104,6 +105,16 @@ func (s *Store) StockCreationTx(ctx context.Context, arg StockCreationTxParams) 
 			StockID:   result.Stock.ID,
 		}
 		result.CreatorStock, err = q.CreateCreatorStock(ctx, arg3)
+		if err != nil {
+			return err
+		}
+
+		arg4 := CreateCreatorPortfolioParams{
+			CreatorID: result.Creator.ID,
+			StockID:   result.Stock.ID,
+			Quantity:  "10000000.000000",
+		}
+		result.CPortfolio, err = q.CreateCreatorPortfolio(ctx, arg4)
 		if err != nil {
 			return err
 		}

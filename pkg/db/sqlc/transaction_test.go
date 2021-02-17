@@ -54,4 +54,14 @@ func TestStockCreationTx(t *testing.T) {
 
 	_, err = store.GetCreatorStock(context.Background(), creatorStock.ID)
 	require.NoError(t, err)
+
+	// check CreatorPortfolio
+	portfolio := result.CPortfolio
+	require.Equal(t, creator.ID, portfolio.CreatorID)
+	require.Equal(t, stock.ID, portfolio.StockID)
+	require.Equal(t, "10000000.000000", portfolio.Quantity)
+	require.NotZero(t, portfolio.ID)
+
+	_, err = store.GetPortfolioByCreatorID(context.Background(), portfolio.CreatorID)
+	require.NoError(t, err)
 }

@@ -21,6 +21,13 @@ type Creator struct {
 	VirginTokensLeft int32 `json:"virgin_tokens_left"`
 }
 
+type CreatorPortfolio struct {
+	ID        int64  `json:"id"`
+	CreatorID int64  `json:"creator_id"`
+	StockID   int64  `json:"stock_id"`
+	Quantity  string `json:"quantity"`
+}
+
 type CreatorStock struct {
 	ID        int64 `json:"id"`
 	CreatorID int64 `json:"creator_id"`
@@ -55,6 +62,13 @@ type Fan struct {
 	PreferredCurrencyID int32     `json:"preferred_currency_id"`
 }
 
+type FanPortfolio struct {
+	ID       int64  `json:"id"`
+	FanID    int64  `json:"fan_id"`
+	StockID  int64  `json:"stock_id"`
+	Quantity string `json:"quantity"`
+}
+
 type Offer struct {
 	ID       int64     `json:"id"`
 	TraderID int64     `json:"trader_id"`
@@ -64,13 +78,6 @@ type Offer struct {
 	Sell     bool      `json:"sell"`
 	Price    string    `json:"price"`
 	Ts       time.Time `json:"ts"`
-}
-
-type Portfolio struct {
-	ID       int64  `json:"id"`
-	TraderID int64  `json:"trader_id"`
-	StockID  int64  `json:"stock_id"`
-	Quantity string `json:"quantity"`
 }
 
 type Price struct {
