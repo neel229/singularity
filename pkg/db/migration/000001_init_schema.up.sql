@@ -65,9 +65,15 @@ CREATE TABLE "creator_stock" (
   "creator_id" bigserial NOT NULL,
   "stock_id" bigserial NOT NULL
 );
-CREATE TABLE "portfolio" (
+CREATE TABLE "fan_portfolio" (
   "id" bigserial PRIMARY KEY,
-  "trader_id" bigserial NOT NULL,
+  "fan_id" bigserial NOT NULL,
+  "stock_id" bigserial NOT NULL,
+  "quantity" decimal(16, 6) NOT NULL
+);
+CREATE TABLE "creator_portfolio" (
+  "id" bigserial PRIMARY KEY,
+  "creator_id" bigserial NOT NULL,
   "stock_id" bigserial NOT NULL,
   "quantity" decimal(16, 6) NOT NULL
 );
@@ -129,8 +135,8 @@ ALTER TABLE "trade"
 ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
 ALTER TABLE "offer"
 ADD FOREIGN KEY ("trader_id") REFERENCES "creator" ("id");
-ALTER TABLE "portfolio"
-ADD FOREIGN KEY ("trader_id") REFERENCES "creator" ("id");
+ALTER TABLE "creator_portfolio"
+ADD FOREIGN KEY ("creator_id") REFERENCES "creator" ("id");
 ALTER TABLE "virgin_trade"
 ADD FOREIGN KEY ("creator_id") REFERENCES "creator" ("id");
 ALTER TABLE "virgin_trade"
@@ -145,15 +151,17 @@ ALTER TABLE "creator_stock"
 ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
 ALTER TABLE "offer"
 ADD FOREIGN KEY ("trader_id") REFERENCES "fan" ("id");
-ALTER TABLE "portfolio"
-ADD FOREIGN KEY ("trader_id") REFERENCES "fan" ("id");
+ALTER TABLE "fan_portfolio"
+ADD FOREIGN KEY ("fan_id") REFERENCES "fan" ("id");
 ALTER TABLE "virgin_trade"
 ADD FOREIGN KEY ("buyer_id") REFERENCES "fan" ("id");
 ALTER TABLE "trade"
 ADD FOREIGN KEY ("buyer_id") REFERENCES "fan" ("id");
 ALTER TABLE "trade"
 ADD FOREIGN KEY ("seller_id") REFERENCES "fan" ("id");
-ALTER TABLE "portfolio"
+ALTER TABLE "fan_portfolio"
+ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
+ALTER TABLE "creator_portfolio"
 ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
 ALTER TABLE "offer"
 ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
