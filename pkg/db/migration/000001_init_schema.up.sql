@@ -99,7 +99,7 @@ CREATE TABLE "virgin_trade" (
   "id" bigserial PRIMARY KEY,
   "stock_id" bigserial NOT NULL,
   "creator_id" bigserial NOT NULL,
-  "buyer_id" bigserial NOT NULL,
+  "fan_id" bigserial NOT NULL,
   "quantity" decimal(16, 6) NOT NULL,
   "unit_price" decimal(16, 6) NOT NULL,
   "details" text NOT NULL,
@@ -139,8 +139,6 @@ ALTER TABLE "creator_portfolio"
 ADD FOREIGN KEY ("creator_id") REFERENCES "creator" ("id");
 ALTER TABLE "virgin_trade"
 ADD FOREIGN KEY ("creator_id") REFERENCES "creator" ("id");
-ALTER TABLE "virgin_trade"
-ADD FOREIGN KEY ("buyer_id") REFERENCES "creator" ("id");
 ALTER TABLE "trade"
 ADD FOREIGN KEY ("buyer_id") REFERENCES "creator" ("id");
 ALTER TABLE "trade"
@@ -154,7 +152,7 @@ ADD FOREIGN KEY ("trader_id") REFERENCES "fan" ("id");
 ALTER TABLE "fan_portfolio"
 ADD FOREIGN KEY ("fan_id") REFERENCES "fan" ("id");
 ALTER TABLE "virgin_trade"
-ADD FOREIGN KEY ("buyer_id") REFERENCES "fan" ("id");
+ADD FOREIGN KEY ("fan_id") REFERENCES "fan" ("id");
 ALTER TABLE "trade"
 ADD FOREIGN KEY ("buyer_id") REFERENCES "fan" ("id");
 ALTER TABLE "trade"
@@ -168,7 +166,7 @@ ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
 ALTER TABLE "trade"
 ADD FOREIGN KEY ("offer_id") REFERENCES "offer" ("id");
 ALTER TABLE "virgin_trade"
-ADD FOREIGN KEY ("virgin_offer_id") REFERENCES "offer" ("id");
+ADD FOREIGN KEY ("virgin_offer_id") REFERENCES "virgin_offer" ("id");
 COMMENT ON COLUMN "fan"."password" IS 'Should be 64 based encoded value';
 COMMENT ON COLUMN "creator"."password" IS 'Should be 64 based encoded value';
 COMMENT ON COLUMN "creator"."virgin_tokens_left" IS 'Number of stocks the creator owns of his/hers';
