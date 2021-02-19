@@ -9,22 +9,22 @@ import (
 
 const createVirginTrade = `-- name: CreateVirginTrade :one
 INSERT INTO virgin_trade (
-  stock_id,
-  creator_id,
-  buyer_id,
-  quantity,
-  unit_price,
-  details,
-  virgin_offer_id
-  ) VALUES (
-  $1, $2, $3, $4, $5, $6, $7
-) RETURNING id, stock_id, creator_id, buyer_id, quantity, unit_price, details, virgin_offer_id
+    stock_id,
+    creator_id,
+    fan_id,
+    quantity,
+    unit_price,
+    details,
+    virgin_offer_id
+  )
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING id, stock_id, creator_id, fan_id, quantity, unit_price, details, virgin_offer_id
 `
 
 type CreateVirginTradeParams struct {
 	StockID       int64  `json:"stock_id"`
 	CreatorID     int64  `json:"creator_id"`
-	BuyerID       int64  `json:"buyer_id"`
+	FanID         int64  `json:"fan_id"`
 	Quantity      string `json:"quantity"`
 	UnitPrice     string `json:"unit_price"`
 	Details       string `json:"details"`
@@ -35,7 +35,7 @@ func (q *Queries) CreateVirginTrade(ctx context.Context, arg CreateVirginTradePa
 	row := q.db.QueryRowContext(ctx, createVirginTrade,
 		arg.StockID,
 		arg.CreatorID,
-		arg.BuyerID,
+		arg.FanID,
 		arg.Quantity,
 		arg.UnitPrice,
 		arg.Details,
@@ -46,7 +46,7 @@ func (q *Queries) CreateVirginTrade(ctx context.Context, arg CreateVirginTradePa
 		&i.ID,
 		&i.StockID,
 		&i.CreatorID,
-		&i.BuyerID,
+		&i.FanID,
 		&i.Quantity,
 		&i.UnitPrice,
 		&i.Details,
@@ -56,7 +56,8 @@ func (q *Queries) CreateVirginTrade(ctx context.Context, arg CreateVirginTradePa
 }
 
 const getVirginTrade = `-- name: GetVirginTrade :one
-SELECT id, stock_id, creator_id, buyer_id, quantity, unit_price, details, virgin_offer_id FROM virgin_trade
+SELECT id, stock_id, creator_id, fan_id, quantity, unit_price, details, virgin_offer_id
+FROM virgin_trade
 WHERE id = $1
 LIMIT 1
 `
@@ -68,7 +69,7 @@ func (q *Queries) GetVirginTrade(ctx context.Context, id int64) (VirginTrade, er
 		&i.ID,
 		&i.StockID,
 		&i.CreatorID,
-		&i.BuyerID,
+		&i.FanID,
 		&i.Quantity,
 		&i.UnitPrice,
 		&i.Details,
@@ -78,10 +79,10 @@ func (q *Queries) GetVirginTrade(ctx context.Context, id int64) (VirginTrade, er
 }
 
 const listVirginTradesByCreator = `-- name: ListVirginTradesByCreator :many
-SELECT id, stock_id, creator_id, buyer_id, quantity, unit_price, details, virgin_offer_id FROM virgin_trade
+SELECT id, stock_id, creator_id, fan_id, quantity, unit_price, details, virgin_offer_id
+FROM virgin_trade
 WHERE creator_id = $1
-LIMIT $2
-OFFSET $3
+LIMIT $2 OFFSET $3
 `
 
 type ListVirginTradesByCreatorParams struct {
@@ -103,7 +104,7 @@ func (q *Queries) ListVirginTradesByCreator(ctx context.Context, arg ListVirginT
 			&i.ID,
 			&i.StockID,
 			&i.CreatorID,
-			&i.BuyerID,
+			&i.FanID,
 			&i.Quantity,
 			&i.UnitPrice,
 			&i.Details,
@@ -123,20 +124,20 @@ func (q *Queries) ListVirginTradesByCreator(ctx context.Context, arg ListVirginT
 }
 
 const listVirginTradesByFan = `-- name: ListVirginTradesByFan :many
-SELECT id, stock_id, creator_id, buyer_id, quantity, unit_price, details, virgin_offer_id FROM virgin_trade
-WHERE buyer_id = $1
-LIMIT $2
-OFFSET $3
+SELECT id, stock_id, creator_id, fan_id, quantity, unit_price, details, virgin_offer_id
+FROM virgin_trade
+WHERE fan_id = $1
+LIMIT $2 OFFSET $3
 `
 
 type ListVirginTradesByFanParams struct {
-	BuyerID int64 `json:"buyer_id"`
-	Limit   int32 `json:"limit"`
-	Offset  int32 `json:"offset"`
+	FanID  int64 `json:"fan_id"`
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
 }
 
 func (q *Queries) ListVirginTradesByFan(ctx context.Context, arg ListVirginTradesByFanParams) ([]VirginTrade, error) {
-	rows, err := q.db.QueryContext(ctx, listVirginTradesByFan, arg.BuyerID, arg.Limit, arg.Offset)
+	rows, err := q.db.QueryContext(ctx, listVirginTradesByFan, arg.FanID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +149,7 @@ func (q *Queries) ListVirginTradesByFan(ctx context.Context, arg ListVirginTrade
 			&i.ID,
 			&i.StockID,
 			&i.CreatorID,
-			&i.BuyerID,
+			&i.FanID,
 			&i.Quantity,
 			&i.UnitPrice,
 			&i.Details,

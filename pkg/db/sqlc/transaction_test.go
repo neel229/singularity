@@ -13,7 +13,7 @@ func TestStockCreationTx(t *testing.T) {
 	arg := StockCreationTxParams{
 		FirstName:           "Logan",
 		LastName:            "Paul",
-		UserName:            "loganpaul",
+		UserName:            "loganpaul69",
 		Email:               "loganpaul@outlook.com",
 		Password:            "klsfjlksqojwo",
 		PreferredCurrencyID: 1,
@@ -64,4 +64,32 @@ func TestStockCreationTx(t *testing.T) {
 
 	_, err = store.GetPortfolioByCreatorID(context.Background(), portfolio.CreatorID)
 	require.NoError(t, err)
+}
+
+func TestVTrade(t *testing.T) {
+	store := NewStore(testDB)
+
+	arg := VTradeTxParams{
+		StockID:       1,
+		CreatorID:     1,
+		FanID:         1,
+		Quantity:      "100.000000",
+		UnitPrice:     "100.420000",
+		Details:       "safjla",
+		VirginOfferID: 1,
+	}
+
+	result, err := store.VTradeTx(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, result)
+
+	// check Virgin Trade
+	vTrade := result.VTrade
+	require.Equal(t, arg.CreatorID, vTrade.CreatorID)
+	require.Equal(t, arg.StockID, vTrade.StockID)
+	require.Equal(t, arg.FanID, vTrade.FanID)
+	require.Equal(t, arg.Quantity, vTrade.Quantity)
+	require.Equal(t, arg.UnitPrice, vTrade.UnitPrice)
+	require.Equal(t, arg.Details, vTrade.Details)
+	require.Equal(t, arg.VirginOfferID, vTrade.VirginOfferID)
 }

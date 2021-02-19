@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strconv"
 )
 
 // Store provides all the functions to execute
@@ -125,50 +126,95 @@ func (s *Store) StockCreationTx(ctx context.Context, arg StockCreationTxParams) 
 	return result, err
 }
 
-// // VTradeTransactionParams contains the
-// // necessery input params
-// type VTradeTransactionParams struct {
-// 	CreatorID int64  `json:"creator_id"`
-// 	FanID     int64  `json:"fan_id"`
-// 	StockID   int64  `json:"stock_id"`
-// 	Quantity  string `json:"quantity"`
-// 	UnitPrice string `json:"unit_price"`
-// 	// VirginOfferID int64  `json:"virgin_offer_id"`
-// }
+// VTradeTxParams holds the input
+// parameters for the VTradeTx
+type VTradeTxParams struct {
+	StockID       int64  `json:"stock_id"`
+	CreatorID     int64  `json:"creator_id"`
+	FanID         int64  `json:"fan_id"`
+	Quantity      string `json:"quantity"`
+	UnitPrice     string `json:"unit_price"`
+	Details       string `json:"details"`
+	VirginOfferID int64  `json:"virgin_offer_id"`
+}
 
-// // VTradeTransactionResult contains the
-// // fields which will be changed after the
-// // transaction.
-// type VTradeTransactionResult struct {
-// 	VTrade     VirginTrade `json:"virgin_trade"`
-// 	CAccount   Creator     `json:"creator_account"`
-// 	CPortfolio Portfolio   `json:"creator_portfolio"`
-// 	FPortfolio Portfolio   `json:"fan_portfolio"`
-// }
+// VTradeTxResult holds the
+// table records which are created/
+// updated after successful VTradeTx
+type VTradeTxResult struct {
+	VTrade VirginTrade `json:"virgin_trade"`
+}
 
-// // VTradeTransaction performs a stock trade
-// // from a creator's account to a fan account.
-// func (s *Store) VTradeTransaction(ctx context.Context, arg VTradeTransactionParams) (VTradeTransactionResult, error) {
-// 	var result VTradeTransactionResult
+// VTradeTx is a db transaction
+// in which a fan buys some tokens
+// from the creator.
+func (s *Store) VTradeTx(ctx context.Context, arg VTradeTxParams) (VTradeTxResult, error) {
+	var result VTradeTxResult
 
-// 	err := s.execTx(ctx, func(q *Queries) error {
-// 		var err error
-// 		vOffer, _ := q.GetVirginOfferByCreator(ctx, arg.CreatorID) // Get the virgin offer using creator id.
-// 		arg1 := CreateVirginTradeParams{
-// 			StockID:       arg.StockID,
-// 			CreatorID:     arg.CreatorID,
-// 			BuyerID:       arg.FanID,
-// 			Quantity:      arg.Quantity,
-// 			UnitPrice:     arg.UnitPrice,
-// 			Details:       "",
-// 			VirginOfferID: vOffer.ID,
-// 		}
-// 		result.VTrade, err = q.CreateVirginTrade(ctx, arg1)
-// 		if err != nil {
-// 			return err
-// 		}
-// 		return nil
-// 	})
+	err := s.execTx(ctx, func(q *Queries) error {
+		var err error
 
-// 	return result, err
-// }
+		// Create a virgin trade entry corresponding to the transaction
+		arg1 := CreateVirginTradeParams{
+			StockID:       arg.StockID,
+			CreatorID:     arg.CreatorID,
+			FanID:         arg.FanID,
+			Quantity:      arg.Quantity,
+			UnitPrice:     arg.UnitPrice,
+			Details:       arg.Details,
+			VirginOfferID: arg.VirginOfferID,
+		}
+		result.VTrade, err = q.CreateVirginTrade(ctx, arg1)
+		if err != nil {
+			return err
+		}
+
+		// Deduct the stock quantity from creator's account & portfolio
+		tokensLeft, _ := q.GetVirginTokensLeft(ctx, arg.CreatorID)
+		quantity, _ := strconv.ParseFloat(arg.Quantity, 64)
+		arg2 := UpdateVirginTokensLeftParams{
+			ID:               arg.CreatorID,
+			VirginTokensLeft: tokensLeft - int32(quantity),
+		}
+		if err = s.UpdateVirginTokensLeft(ctx, arg2); err != nil {
+			return err
+		}
+
+		creator, _ := q.GetCreator(ctx, arg.CreatorID)
+		arg3 := UpdateCreatorStockQuantityParams{
+			ID:       arg.CreatorID,
+			Quantity: strconv.Itoa(int(creator.VirginTokensLeft)),
+		}
+		if err = s.UpdateCreatorStockQuantity(ctx, arg3); err != nil {
+			return err
+		}
+
+		// Add the stock quantity in fan's portfolio
+		portfolio, _ := q.GetPortfolioByFanID(ctx, arg.FanID)
+		if portfolio.StockID == arg.StockID {
+			quantity1, _ := strconv.ParseFloat(portfolio.Quantity, 64)
+			quantity2, _ := strconv.ParseFloat(arg.Quantity, 64)
+			quantity3 := quantity1 + quantity2
+			quantity := strconv.FormatFloat(quantity3, 'e', 6, 64)
+			arg4 := UpdateFanStockQuantityParams{
+				ID:       arg.FanID,
+				Quantity: quantity,
+			}
+			if err = s.UpdateFanStockQuantity(ctx, arg4); err != nil {
+				return err
+			}
+		} else {
+			arg5 := CreateFanPortfolioParams{
+				FanID:    arg.FanID,
+				StockID:  arg.StockID,
+				Quantity: arg.Quantity,
+			}
+			if _, err = s.CreateFanPortfolio(ctx, arg5); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+
+	return result, err
+}

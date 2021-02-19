@@ -10,7 +10,7 @@ import (
 func createRandomVirginTrades(t *testing.T) VirginTrade {
 	arg := CreateVirginTradeParams{
 		StockID:       1,
-		BuyerID:       1,
+		FanID:         1,
 		CreatorID:     2,
 		Quantity:      "1.000000",
 		UnitPrice:     "69.420000",
@@ -22,7 +22,7 @@ func createRandomVirginTrades(t *testing.T) VirginTrade {
 	require.NotEmpty(t, trade)
 
 	require.Equal(t, arg.StockID, trade.StockID)
-	require.Equal(t, arg.BuyerID, trade.BuyerID)
+	require.Equal(t, arg.FanID, trade.FanID)
 	require.Equal(t, arg.CreatorID, trade.CreatorID)
 	require.Equal(t, arg.Quantity, trade.Quantity)
 	require.Equal(t, arg.UnitPrice, trade.UnitPrice)
@@ -45,7 +45,7 @@ func TestGetVirginTrade(t *testing.T) {
 	require.NotEmpty(t, trade1)
 
 	require.Equal(t, trade.StockID, trade1.StockID)
-	require.Equal(t, trade.BuyerID, trade1.BuyerID)
+	require.Equal(t, trade.FanID, trade1.FanID)
 	require.Equal(t, trade.CreatorID, trade1.CreatorID)
 	require.Equal(t, trade.Quantity, trade1.Quantity)
 	require.Equal(t, trade.UnitPrice, trade1.UnitPrice)
@@ -78,9 +78,9 @@ func TestVirginTradesByFans(t *testing.T) {
 		createRandomVirginTrades(t)
 	}
 	arg := ListVirginTradesByFanParams{
-		BuyerID: 1,
-		Limit:   5,
-		Offset:  5,
+		FanID:  1,
+		Limit:  5,
+		Offset: 5,
 	}
 	trades, err := testQueries.ListVirginTradesByFan(context.Background(), arg)
 	require.NoError(t, err)
