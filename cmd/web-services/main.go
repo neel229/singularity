@@ -27,6 +27,6 @@ func main() {
 	store := db.NewStore(conn)
 	server := api.NewServer(store)
 	server.SetRoutes()
-	fmt.Println("starting a server on port :69420")
+	fmt.Printf("starting a server on port %s", addr)
 	server.StartServer(addr)
 }
