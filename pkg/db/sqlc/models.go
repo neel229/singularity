@@ -35,7 +35,7 @@ type CreatorStock struct {
 }
 
 type Currency struct {
-	ID     int32  `json:"id"`
+	ID     int64  `json:"id"`
 	Code   string `json:"code"`
 	Name   string `json:"name"`
 	IsBase bool   `json:"is_base"`

@@ -41,10 +41,9 @@ func (s *Server) CreateCurrency(ctx context.Context) http.HandlerFunc {
 // GetCurrency fetches the currency
 // based on the id supplied
 func (s *Server) GetCurrency(ctx context.Context) http.HandlerFunc {
-	var id int32
 	return func(w http.ResponseWriter, r *http.Request) {
 		param, _ := strconv.Atoi(chi.URLParam(r, "id"))
-		id = int32(param)
+		id := int64(param)
 		currency, err := s.store.GetCurrency(ctx, id)
 		if err != nil {
 			http.Error(w, "invalid currency", http.StatusBadRequest)
@@ -78,7 +77,7 @@ func (s *Server) ListCurrencies(ctx context.Context) http.HandlerFunc {
 }
 
 type updateCurrencyRequest struct {
-	ID     int32 `json:"id"`
+	ID     int64 `json:"id"`
 	IsBase bool  `json:"is_base"`
 }
 
@@ -88,7 +87,7 @@ func (s *Server) UpdateCurrency(ctx context.Context) http.HandlerFunc {
 	req := new(updateCurrencyRequest)
 	return func(w http.ResponseWriter, r *http.Request) {
 		param, _ := strconv.Atoi(chi.URLParam(r, "id"))
-		id := int32(param)
+		id := int64(param)
 		json.NewDecoder(r.Body).Decode(&req)
 		arg := db.UpdateCurrencyParams{
 			ID:     id,
@@ -106,7 +105,7 @@ func (s *Server) UpdateCurrency(ctx context.Context) http.HandlerFunc {
 func (s *Server) DeleteCurrency(ctx context.Context) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		param, _ := strconv.Atoi(chi.URLParam(r, "id"))
-		id := int32(param)
+		id := int64(param)
 		if err := s.store.DeleteCurrency(ctx, id); err != nil {
 			http.Error(w, "error deleting the currency, check the currency id", http.StatusBadRequest)
 		}

@@ -41,7 +41,7 @@ DELETE FROM currency
 WHERE id = $1
 `
 
-func (q *Queries) DeleteCurrency(ctx context.Context, id int32) error {
+func (q *Queries) DeleteCurrency(ctx context.Context, id int64) error {
 	_, err := q.db.ExecContext(ctx, deleteCurrency, id)
 	return err
 }
@@ -51,7 +51,7 @@ SELECT id, code, name, is_base FROM currency
 WHERE id = $1 LIMIT 1
 `
 
-func (q *Queries) GetCurrency(ctx context.Context, id int32) (Currency, error) {
+func (q *Queries) GetCurrency(ctx context.Context, id int64) (Currency, error) {
 	row := q.db.QueryRowContext(ctx, getCurrency, id)
 	var i Currency
 	err := row.Scan(
@@ -111,7 +111,7 @@ RETURNING id, code, name, is_base
 `
 
 type UpdateCurrencyParams struct {
-	ID     int32 `json:"id"`
+	ID     int64 `json:"id"`
 	IsBase bool  `json:"is_base"`
 }
 

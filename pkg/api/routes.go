@@ -1,9 +1,6 @@
 package api
 
 import (
-	"encoding/json"
-	"net/http"
-
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
@@ -12,14 +9,12 @@ import (
 // corresponding handler functions
 func (s *Server) SetRoutes() {
 	s.r.Use(middleware.Logger)
-	s.r.Get("/home", homepage)
+	s.currencyRoutes()
+	s.currencyRateRoutes()
 	s.r.Post("/create/creator", s.CreateCreator(s.ctx))
-	s.CurrencyRoutes()
 }
 
-// CurrencyRoutes sets the routes
-// respect to currencies
-func (s *Server) CurrencyRoutes() {
+func (s *Server) currencyRoutes() {
 	s.r.Route("/currency", func(r chi.Router) {
 		r.Get("/", s.ListCurrencies(s.ctx))
 		r.Post("/", s.CreateCurrency(s.ctx))
@@ -33,6 +28,13 @@ func (s *Server) CurrencyRoutes() {
 	})
 }
 
-func homepage(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode("This is the homepage")
+func (s *Server) currencyRateRoutes() {
+	s.r.Route("/currency/rate", func(r chi.Router) {
+		r.Post("/", s.CreateCurrencyRate(s.ctx))
+
+		r.Route("/{id}", func(r chi.Router) {
+			r.Get("/", s.GetCurrencyRate(s.ctx))
+			r.Put("/", s.UpdateCurrencyRate(s.ctx))
+		})
+	})
 }
