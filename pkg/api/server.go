@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"log"
 	"net/http"
 
@@ -13,6 +14,7 @@ import (
 type Server struct {
 	r     *chi.Mux
 	store *db.Store
+	ctx   context.Context
 }
 
 // NewServer creates a new server
@@ -20,6 +22,7 @@ func NewServer(s *db.Store) *Server {
 	return &Server{
 		r:     chi.NewRouter(),
 		store: s,
+		ctx:   context.Background(),
 	}
 }
 
