@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -74,10 +73,7 @@ func (s *Server) ListCurrencies(ctx context.Context) http.HandlerFunc {
 		if err != nil {
 			http.Error(w, "problem fetching the list of currenices", http.StatusInternalServerError)
 		}
-		for _, currency := range currencies {
-			log.Print("ranging over currencies")
-			json.NewEncoder(w).Encode(currency)
-		}
+		json.NewEncoder(w).Encode(currencies)
 	}
 }
 
