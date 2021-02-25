@@ -8,13 +8,9 @@ import (
 )
 
 const createCreatorPortfolio = `-- name: CreateCreatorPortfolio :one
-INSERT INTO creator_portfolio (
-  creator_id,
-  stock_id,
-  quantity
-  ) VALUES (
-  $1, $2, $3
-) RETURNING id, creator_id, stock_id, quantity
+INSERT INTO creator_portfolio (creator_id, stock_id, quantity)
+VALUES ($1, $2, $3)
+RETURNING id, creator_id, stock_id, quantity
 `
 
 type CreateCreatorPortfolioParams struct {
@@ -45,26 +41,9 @@ func (q *Queries) DeleteStockFromCreatorPortfolio(ctx context.Context, id int64)
 	return err
 }
 
-const getCreatorPortfolio = `-- name: GetCreatorPortfolio :one
-SELECT id, creator_id, stock_id, quantity FROM creator_portfolio
-WHERE id = $1
-LIMIT 1
-`
-
-func (q *Queries) GetCreatorPortfolio(ctx context.Context, id int64) (CreatorPortfolio, error) {
-	row := q.db.QueryRowContext(ctx, getCreatorPortfolio, id)
-	var i CreatorPortfolio
-	err := row.Scan(
-		&i.ID,
-		&i.CreatorID,
-		&i.StockID,
-		&i.Quantity,
-	)
-	return i, err
-}
-
 const getPortfolioByCreatorID = `-- name: GetPortfolioByCreatorID :one
-SELECT id, creator_id, stock_id, quantity FROM creator_portfolio
+SELECT id, creator_id, stock_id, quantity
+FROM creator_portfolio
 WHERE creator_id = $1
 LIMIT 1
 `
@@ -83,16 +62,18 @@ func (q *Queries) GetPortfolioByCreatorID(ctx context.Context, creatorID int64) 
 
 const updateCreatorStockQuantity = `-- name: UpdateCreatorStockQuantity :exec
 UPDATE creator_portfolio
-SET quantity = $2
-WHERE id = $1
+SET quantity = $3
+WHERE creator_id = $1
+  and stock_id = $2
 `
 
 type UpdateCreatorStockQuantityParams struct {
-	ID       int64  `json:"id"`
-	Quantity string `json:"quantity"`
+	CreatorID int64  `json:"creator_id"`
+	StockID   int64  `json:"stock_id"`
+	Quantity  string `json:"quantity"`
 }
 
 func (q *Queries) UpdateCreatorStockQuantity(ctx context.Context, arg UpdateCreatorStockQuantityParams) error {
-	_, err := q.db.ExecContext(ctx, updateCreatorStockQuantity, arg.ID, arg.Quantity)
+	_, err := q.db.ExecContext(ctx, updateCreatorStockQuantity, arg.CreatorID, arg.StockID, arg.Quantity)
 	return err
 }

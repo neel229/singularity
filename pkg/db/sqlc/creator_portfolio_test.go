@@ -30,19 +30,6 @@ func TestCreateCreatorPortfolio(t *testing.T) {
 	createRandomCreatorPortfolio(t)
 }
 
-func TestGetCreaorPortfolio(t *testing.T) {
-	portfolio := createRandomCreatorPortfolio(t)
-	portfolio1, err := testQueries.GetCreatorPortfolio(context.Background(), portfolio.ID)
-	require.NoError(t, err)
-	require.NotEmpty(t, portfolio1)
-
-	require.Equal(t, portfolio.CreatorID, portfolio1.CreatorID)
-	require.Equal(t, portfolio.StockID, portfolio1.StockID)
-	require.Equal(t, portfolio.Quantity, portfolio1.Quantity)
-
-	require.NotZero(t, portfolio1.ID)
-}
-
 func TestGetPortfolioByCreatorID(t *testing.T) {
 	portfolio := createRandomCreatorPortfolio(t)
 	portfolio1, err := testQueries.GetPortfolioByCreatorID(context.Background(), portfolio.CreatorID)
@@ -60,8 +47,9 @@ func TestUpdateCreatorStockQuantity(t *testing.T) {
 	portfolio := createRandomCreatorPortfolio(t)
 
 	arg := UpdateCreatorStockQuantityParams{
-		ID:       portfolio.ID,
-		Quantity: "65.000000",
+		CreatorID: portfolio.CreatorID,
+		StockID:   portfolio.StockID,
+		Quantity:  "65.000000",
 	}
 
 	err := testQueries.UpdateCreatorStockQuantity(context.Background(), arg)
@@ -73,6 +61,6 @@ func TestDeleteStockFromCreatorPortfolio(t *testing.T) {
 	err := testQueries.DeleteStockFromCreatorPortfolio(context.Background(), portfolio.StockID)
 	require.NoError(t, err)
 
-	portfolio1, err := testQueries.GetCreatorPortfolio(context.Background(), portfolio.ID)
+	portfolio1, err := testQueries.GetPortfolioByCreatorID(context.Background(), portfolio.CreatorID)
 	require.Empty(t, portfolio1.StockID)
 }

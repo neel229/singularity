@@ -182,8 +182,9 @@ func (s *Store) VTradeTx(ctx context.Context, arg VTradeTxParams) (VTradeTxResul
 
 		creator, _ := q.GetCreator(ctx, arg.CreatorID)
 		arg3 := UpdateCreatorStockQuantityParams{
-			ID:       arg.CreatorID,
-			Quantity: strconv.Itoa(int(creator.VirginTokensLeft)),
+			CreatorID: arg.CreatorID,
+			StockID:   arg.StockID,
+			Quantity:  strconv.Itoa(int(creator.VirginTokensLeft)),
 		}
 		if err = s.UpdateCreatorStockQuantity(ctx, arg3); err != nil {
 			return err
