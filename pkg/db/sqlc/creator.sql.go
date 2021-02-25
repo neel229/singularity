@@ -27,7 +27,7 @@ type CreateCreatorParams struct {
 	UserName            string `json:"user_name"`
 	Email               string `json:"email"`
 	Password            string `json:"password"`
-	PreferredCurrencyID int32  `json:"preferred_currency_id"`
+	PreferredCurrencyID int64  `json:"preferred_currency_id"`
 	VirginTokensLeft    int32  `json:"virgin_tokens_left"`
 }
 
@@ -182,7 +182,7 @@ WHERE id = $1
 
 type UpdateCreatorPreferredCurrencyParams struct {
 	ID                  int64 `json:"id"`
-	PreferredCurrencyID int32 `json:"preferred_currency_id"`
+	PreferredCurrencyID int64 `json:"preferred_currency_id"`
 }
 
 func (q *Queries) UpdateCreatorPreferredCurrency(ctx context.Context, arg UpdateCreatorPreferredCurrencyParams) error {

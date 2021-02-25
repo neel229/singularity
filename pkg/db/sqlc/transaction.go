@@ -49,7 +49,7 @@ type StockCreationTxParams struct {
 	UserName            string `json:"user_name"`
 	Email               string `json:"email"`
 	Password            string `json:"password"`
-	PreferredCurrencyID int32  `json:"preferred_currency_id"`
+	PreferredCurrencyID int64  `json:"preferred_currency_id"`
 	Ticker              string `json:"ticker"`
 	Details             string `json:"details"`
 }

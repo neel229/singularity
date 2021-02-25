@@ -28,7 +28,7 @@ INSERT INTO report (
 type CreateReportParams struct {
 	TradingDate time.Time `json:"trading_date"`
 	StockID     int64     `json:"stock_id"`
-	CurrencyID  int32     `json:"currency_id"`
+	CurrencyID  int64     `json:"currency_id"`
 	FirstPrice  string    `json:"first_price"`
 	LastPrice   string    `json:"last_price"`
 	MinPrice    string    `json:"min_price"`

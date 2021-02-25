@@ -26,7 +26,7 @@ type CreateFanParams struct {
 	UserName            string `json:"user_name"`
 	Password            string `json:"password"`
 	Email               string `json:"email"`
-	PreferredCurrencyID int32  `json:"preferred_currency_id"`
+	PreferredCurrencyID int64  `json:"preferred_currency_id"`
 }
 
 func (q *Queries) CreateFan(ctx context.Context, arg CreateFanParams) (Fan, error) {
@@ -116,7 +116,7 @@ WHERE id = $1
 
 type UpdatePreferredCurrencyParams struct {
 	ID                  int64 `json:"id"`
-	PreferredCurrencyID int32 `json:"preferred_currency_id"`
+	PreferredCurrencyID int64 `json:"preferred_currency_id"`
 }
 
 func (q *Queries) UpdatePreferredCurrency(ctx context.Context, arg UpdatePreferredCurrencyParams) error {

@@ -20,7 +20,7 @@ INSERT INTO price (
 
 type CreatePriceParams struct {
 	StockID    int64  `json:"stock_id"`
-	CurrencyID int32  `json:"currency_id"`
+	CurrencyID int64  `json:"currency_id"`
 	Buy        string `json:"buy"`
 	Sell       string `json:"sell"`
 }

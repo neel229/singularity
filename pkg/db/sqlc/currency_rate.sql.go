@@ -14,8 +14,8 @@ RETURNING id, currency_id, base_currency_id, rate, ts
 `
 
 type CreateCurrencyRateParams struct {
-	CurrencyID     int32  `json:"currency_id"`
-	BaseCurrencyID int32  `json:"base_currency_id"`
+	CurrencyID     int64  `json:"currency_id"`
+	BaseCurrencyID int64  `json:"base_currency_id"`
 	Rate           string `json:"rate"`
 }
 

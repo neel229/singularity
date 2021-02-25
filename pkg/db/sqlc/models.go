@@ -16,7 +16,7 @@ type Creator struct {
 	Email               string    `json:"email"`
 	TimeRegistered      time.Time `json:"time_registered"`
 	TimeConfirmed       time.Time `json:"time_confirmed"`
-	PreferredCurrencyID int32     `json:"preferred_currency_id"`
+	PreferredCurrencyID int64     `json:"preferred_currency_id"`
 	// Number of stocks the creator owns of his/hers
 	VirginTokensLeft int32 `json:"virgin_tokens_left"`
 }
@@ -43,8 +43,8 @@ type Currency struct {
 
 type CurrencyRate struct {
 	ID             int64     `json:"id"`
-	CurrencyID     int32     `json:"currency_id"`
-	BaseCurrencyID int32     `json:"base_currency_id"`
+	CurrencyID     int64     `json:"currency_id"`
+	BaseCurrencyID int64     `json:"base_currency_id"`
 	Rate           string    `json:"rate"`
 	Ts             time.Time `json:"ts"`
 }
@@ -59,7 +59,7 @@ type Fan struct {
 	Email               string    `json:"email"`
 	TimeRegistered      time.Time `json:"time_registered"`
 	TimeConfirmed       time.Time `json:"time_confirmed"`
-	PreferredCurrencyID int32     `json:"preferred_currency_id"`
+	PreferredCurrencyID int64     `json:"preferred_currency_id"`
 }
 
 type FanPortfolio struct {
@@ -83,7 +83,7 @@ type Offer struct {
 type Price struct {
 	ID         int64     `json:"id"`
 	StockID    int64     `json:"stock_id"`
-	CurrencyID int32     `json:"currency_id"`
+	CurrencyID int64     `json:"currency_id"`
 	Buy        string    `json:"buy"`
 	Sell       string    `json:"sell"`
 	Ts         time.Time `json:"ts"`
@@ -93,7 +93,7 @@ type Report struct {
 	ID          int64     `json:"id"`
 	TradingDate time.Time `json:"trading_date"`
 	StockID     int64     `json:"stock_id"`
-	CurrencyID  int32     `json:"currency_id"`
+	CurrencyID  int64     `json:"currency_id"`
 	FirstPrice  string    `json:"first_price"`
 	LastPrice   string    `json:"last_price"`
 	MinPrice    string    `json:"min_price"`
