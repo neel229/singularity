@@ -6,8 +6,8 @@ CREATE TABLE "currency" (
 );
 CREATE TABLE "currency_rate" (
   "id" bigserial PRIMARY KEY,
-  "currency_id" int NOT NULL,
-  "base_currency_id" int NOT NULL,
+  "currency_id" bigserial NOT NULL,
+  "base_currency_id" bigserial NOT NULL,
   "rate" decimal(16, 6) NOT NULL,
   "ts" timestamptz NOT NULL DEFAULT (now())
 );
@@ -19,7 +19,7 @@ CREATE TABLE "stock" (
 CREATE TABLE "price" (
   "id" bigserial PRIMARY KEY,
   "stock_id" bigserial NOT NULL,
-  "currency_id" int NOT NULL,
+  "currency_id" bigserial NOT NULL,
   "buy" decimal(16, 6) NOT NULL,
   "sell" decimal(16, 6) NOT NULL,
   "ts" timestamptz NOT NULL DEFAULT (now())
@@ -28,7 +28,7 @@ CREATE TABLE "report" (
   "id" bigserial PRIMARY KEY,
   "trading_date" date NOT NULL,
   "stock_id" bigserial NOT NULL,
-  "currency_id" int NOT NULL,
+  "currency_id" bigserial NOT NULL,
   "first_price" decimal(16, 6) NOT NULL,
   "last_price" decimal(16, 6) NOT NULL,
   "min_price" decimal(16, 6) NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE "fan" (
   "email" varchar(128) NOT NULL,
   "time_registered" timestamptz NOT NULL DEFAULT (now()),
   "time_confirmed" timestamptz NOT NULL DEFAULT (now()),
-  "preferred_currency_id" int NOT NULL
+  "preferred_currency_id" bigserial NOT NULL
 );
 CREATE TABLE "creator" (
   "id" bigserial PRIMARY KEY,
@@ -57,7 +57,7 @@ CREATE TABLE "creator" (
   "email" varchar(128) NOT NULL,
   "time_registered" timestamptz NOT NULL DEFAULT (now()),
   "time_confirmed" timestamptz NOT NULL DEFAULT (now()),
-  "preferred_currency_id" int NOT NULL,
+  "preferred_currency_id" bigserial NOT NULL,
   "virgin_tokens_left" int NOT NULL
 );
 CREATE TABLE "creator_stock" (
