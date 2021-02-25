@@ -16,7 +16,7 @@ type createCreatorRequest struct {
 	UserName            string `json:"user_name" validate:"required"`
 	Email               string `json:"email" validate:"required, email"`
 	Password            string `json:"password" validate:"required"`
-	PreferredCurrencyID int32  `json:"preferred_currency_id" validate:"required"`
+	PreferredCurrencyID int64  `json:"preferred_currency_id" validate:"required"`
 	Ticker              string `json:"ticker" validate:"required"`
 	Details             string `json:"details" validate:"required"`
 }

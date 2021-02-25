@@ -13,8 +13,8 @@ import (
 // CreateCurrencyRateRequest holds the json
 // data for creating a currency rate record
 type CreateCurrencyRateRequest struct {
-	CurrencyID     int32  `json:"currency_id"`
-	BaseCurrencyID int32  `json:"base_currency_id"`
+	CurrencyID     int64  `json:"currency_id"`
+	BaseCurrencyID int64  `json:"base_currency_id"`
 	Rate           string `json:"rate"`
 }
 
@@ -38,7 +38,7 @@ func (s *Server) CreateCurrencyRate(ctx context.Context) http.HandlerFunc {
 	}
 }
 
-// GetCurrencyRate fetches a currency rate
+// GetCurrencyRate fetcaes a currency rate
 // based on the id provided
 func (s *Server) GetCurrencyRate(ctx context.Context) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {

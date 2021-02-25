@@ -21,7 +21,7 @@ type createCurrencyRequest struct {
 // for trading on the platform
 func (s *Server) CreateCurrency(ctx context.Context) http.HandlerFunc {
 	req := new(createCurrencyRequest)
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(rw http.ResponseWriter, r *http.Request) {
 		json.NewDecoder(r.Body).Decode(&req)
 		arg := db.CreateCurrencyParams{
 			Code:   req.Code,
@@ -31,25 +31,25 @@ func (s *Server) CreateCurrency(ctx context.Context) http.HandlerFunc {
 
 		currency, err := s.store.CreateCurrency(ctx, arg)
 		if err != nil {
-			http.Error(w, "error writing data to db", http.StatusInternalServerError)
+			http.Error(rw, "error writing data to db", http.StatusInternalServerError)
 			return
 		}
-		json.NewEncoder(w).Encode(currency)
+		json.NewEncoder(rw).Encode(currency)
 	}
 }
 
 // GetCurrency fetches the currency
 // based on the id supplied
 func (s *Server) GetCurrency(ctx context.Context) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(rw http.ResponseWriter, r *http.Request) {
 		param, _ := strconv.Atoi(chi.URLParam(r, "id"))
 		id := int64(param)
 		currency, err := s.store.GetCurrency(ctx, id)
 		if err != nil {
-			http.Error(w, "invalid currency", http.StatusBadRequest)
+			http.Error(rw, "invalid currency", http.StatusBadRequest)
 			return
 		}
-		json.NewEncoder(w).Encode(&currency)
+		json.NewEncoder(rw).Encode(&currency)
 	}
 }
 
@@ -62,7 +62,7 @@ type listCurrenciesRequest struct {
 // tradable on the platform
 func (s *Server) ListCurrencies(ctx context.Context) http.HandlerFunc {
 	req := new(listCurrenciesRequest)
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(rw http.ResponseWriter, r *http.Request) {
 		json.NewDecoder(r.Body).Decode(&req)
 		arg := db.ListCurrenciesParams{
 			Limit:  req.Limit,
@@ -70,9 +70,9 @@ func (s *Server) ListCurrencies(ctx context.Context) http.HandlerFunc {
 		}
 		currencies, err := s.store.ListCurrencies(ctx, arg)
 		if err != nil {
-			http.Error(w, "problem fetching the list of currenices", http.StatusInternalServerError)
+			http.Error(rw, "problem fetching the list of currenices", http.StatusInternalServerError)
 		}
-		json.NewEncoder(w).Encode(currencies)
+		json.NewEncoder(rw).Encode(currencies)
 	}
 }
 
@@ -85,7 +85,7 @@ type updateCurrencyRequest struct {
 // of the given currency
 func (s *Server) UpdateCurrency(ctx context.Context) http.HandlerFunc {
 	req := new(updateCurrencyRequest)
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(rw http.ResponseWriter, r *http.Request) {
 		param, _ := strconv.Atoi(chi.URLParam(r, "id"))
 		id := int64(param)
 		json.NewDecoder(r.Body).Decode(&req)
@@ -94,7 +94,7 @@ func (s *Server) UpdateCurrency(ctx context.Context) http.HandlerFunc {
 			IsBase: req.IsBase,
 		}
 		if err := s.store.UpdateCurrency(ctx, arg); err != nil {
-			http.Error(w, "error updating the given currency", http.StatusBadRequest)
+			http.Error(rw, "error updating the given currency", http.StatusBadRequest)
 			return
 		}
 	}
@@ -103,11 +103,11 @@ func (s *Server) UpdateCurrency(ctx context.Context) http.HandlerFunc {
 // DeleteCurrency deletes the currency
 // with the provided id from.
 func (s *Server) DeleteCurrency(ctx context.Context) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(rw http.ResponseWriter, r *http.Request) {
 		param, _ := strconv.Atoi(chi.URLParam(r, "id"))
 		id := int64(param)
 		if err := s.store.DeleteCurrency(ctx, id); err != nil {
-			http.Error(w, "error deleting the currency, check the currency id", http.StatusBadRequest)
+			http.Error(rw, "error deleting the currency, check the currency id", http.StatusBadRequest)
 		}
 	}
 }
