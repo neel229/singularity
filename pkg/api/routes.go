@@ -14,6 +14,8 @@ func (s *Server) SetRoutes() {
 	s.fanRoutes()
 	s.creatorRoutes()
 	s.stockRoutes()
+	s.vofferRoutes()
+	s.vtradeRoutes()
 }
 
 // Sets up routes for currency
@@ -71,6 +73,7 @@ func (s *Server) creatorRoutes() {
 		r.Route("/{id}", func(r chi.Router) {
 			r.Get("/", s.GetCreator(s.ctx))
 			r.Get("/vtokens", s.GetVirginTokensLeft(s.ctx))
+			r.Get("/voffer", s.GetVirginOfferByCreator(s.ctx))
 			r.Put("/email", s.UpdateCreatorEmail(s.ctx))
 			r.Put("/password", s.UpdateCreatorPassword(s.ctx))
 			r.Put("/pcurrency", s.UpdateCreatorPreferredCurrency(s.ctx))
@@ -96,5 +99,22 @@ func (s *Server) stockRoutes() {
 			r.Get("/", s.GetStock(s.ctx))
 			r.Put("/", s.UpdateStockDetails(s.ctx))
 		})
+	})
+}
+
+func (s *Server) vofferRoutes() {
+	s.r.Route("/voffers", func(r chi.Router) {
+		r.Get("/", s.ListVirginOffers(s.ctx))
+		r.Post("/", s.CreateVirginOffer(s.ctx))
+
+		r.Route("/{id}", func(r chi.Router) {
+			r.Get("/", s.GetVirginOffer(s.ctx))
+		})
+	})
+}
+
+func (s *Server) vtradeRoutes() {
+	s.r.Route("/vtrade", func(r chi.Router) {
+		r.Post("/", s.VTradeTx(s.ctx))
 	})
 }
