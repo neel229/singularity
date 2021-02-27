@@ -8,13 +8,8 @@ import (
 )
 
 const createCurrency = `-- name: CreateCurrency :one
-INSERT INTO currency (
-  code, 
-  name,
-  is_base
-) VALUES (
-  $1, $2, $3
-)
+INSERT INTO currency (code, name, is_base)
+VALUES ($1, $2, $3)
 RETURNING id, code, name, is_base
 `
 
@@ -47,8 +42,10 @@ func (q *Queries) DeleteCurrency(ctx context.Context, id int64) error {
 }
 
 const getCurrency = `-- name: GetCurrency :one
-SELECT id, code, name, is_base FROM currency
-WHERE id = $1 LIMIT 1
+SELECT id, code, name, is_base
+FROM currency
+WHERE id = $1
+LIMIT 1
 `
 
 func (q *Queries) GetCurrency(ctx context.Context, id int64) (Currency, error) {
@@ -64,10 +61,10 @@ func (q *Queries) GetCurrency(ctx context.Context, id int64) (Currency, error) {
 }
 
 const listCurrencies = `-- name: ListCurrencies :many
-SELECT id, code, name, is_base FROM currency
+SELECT id, code, name, is_base
+FROM currency
 ORDER BY id
-LIMIT $1
-OFFSET $2
+LIMIT $1 OFFSET $2
 `
 
 type ListCurrenciesParams struct {

@@ -67,9 +67,8 @@ func TestListOffersByCreator(t *testing.T) {
 	}
 
 	arg := ListVirginOffersParams{
-		CreatorID: 1,
-		Limit:     5,
-		Offset:    5,
+		Limit:  5,
+		Offset: 5,
 	}
 
 	offers, err := testQueries.ListVirginOffers(context.Background(), arg)

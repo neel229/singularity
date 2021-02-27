@@ -89,19 +89,17 @@ func (q *Queries) GetVirginOfferByCreator(ctx context.Context, creatorID int64) 
 const listVirginOffers = `-- name: ListVirginOffers :many
 SELECT id, creator_id, stock_id, quantity, price, ts
 FROM virgin_offer
-WHERE creator_id = $1
 ORDER BY id
-LIMIT $2 OFFSET $3
+LIMIT $1 OFFSET $2
 `
 
 type ListVirginOffersParams struct {
-	CreatorID int64 `json:"creator_id"`
-	Limit     int32 `json:"limit"`
-	Offset    int32 `json:"offset"`
+	Limit  int32 `json:"limit"`
+	Offset int32 `json:"offset"`
 }
 
 func (q *Queries) ListVirginOffers(ctx context.Context, arg ListVirginOffersParams) ([]VirginOffer, error) {
-	rows, err := q.db.QueryContext(ctx, listVirginOffers, arg.CreatorID, arg.Limit, arg.Offset)
+	rows, err := q.db.QueryContext(ctx, listVirginOffers, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
