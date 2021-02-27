@@ -20,6 +20,5 @@ LIMIT 1;
 -- name: ListVirginOffers :many
 SELECT *
 FROM virgin_offer
-WHERE creator_id = $1
 ORDER BY id
-LIMIT $2 OFFSET $3;
+LIMIT $1 OFFSET $2;
