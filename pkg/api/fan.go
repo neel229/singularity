@@ -123,3 +123,69 @@ func (s *Server) UpdateFanPreferredCurrency(ctx context.Context) http.HandlerFun
 		}
 	}
 }
+
+// Fan Portfolio CRUD operations
+
+// GetFanPortfolio fetches the portfolio of a Fan
+// provided his id
+func (s *Server) GetFanPortfolio(ctx context.Context) http.HandlerFunc {
+	return func(rw http.ResponseWriter, r *http.Request) {
+		param, _ := strconv.Atoi(chi.URLParam(r, "id"))
+		id := int64(param)
+		portfolio, err := s.store.GetPortfolioByFanID(ctx, id)
+		if err != nil {
+			http.Error(rw, "error finding portfolio, check the fan id", http.StatusBadRequest)
+			return
+		}
+		json.NewEncoder(rw).Encode(portfolio)
+	}
+}
+
+type updateFanStockQuantityRequest struct {
+	StockID  int64  `json:"stock_id"`
+	Quantity string `json:"quantity"`
+}
+
+// UpdateFanStockQuantity updates the stock quantity
+// in a fan's portfolio
+func (s *Server) UpdateFanStockQuantity(ctx context.Context) http.HandlerFunc {
+	req := new(updateFanStockQuantityRequest)
+	return func(rw http.ResponseWriter, r *http.Request) {
+		json.NewDecoder(r.Body).Decode(&req)
+		param, _ := strconv.Atoi(chi.URLParam(r, "id"))
+		id := int64(param)
+		arg := db.UpdateFanStockQuantityParams{
+			FanID:    id,
+			StockID:  req.StockID,
+			Quantity: req.Quantity,
+		}
+		if err := s.store.UpdateFanStockQuantity(ctx, arg); err != nil {
+			http.Error(rw, "error updating the quantity, please retry", http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
+type deleteStockFromFanPortfolioRequest struct {
+	StockID int64 `json:"stock_id"`
+}
+
+// DeleteStockFromFanPortfolio deletes a specific stock
+// from a fan's portfolio meaning he has sold all his
+// tokens
+func (s *Server) DeleteStockFromFanPortfolio(ctx context.Context) http.HandlerFunc {
+	req := new(deleteStockFromFanPortfolioRequest)
+	return func(rw http.ResponseWriter, r *http.Request) {
+		json.NewDecoder(r.Body).Decode(&req)
+		param, _ := strconv.Atoi(chi.URLParam(r, "id"))
+		id := int64(param)
+		arg := db.DeleteStockFromFanPortfolioParams{
+			FanID:   id,
+			StockID: req.StockID,
+		}
+		if err := s.store.DeleteStockFromFanPortfolio(ctx, arg); err != nil {
+			http.Error(rw, "error deleting stock from portfolio", http.StatusInternalServerError)
+			return
+		}
+	}
+}

@@ -322,9 +322,8 @@ func (s *Server) GetPortfolioByCreatorID(ctx context.Context) http.HandlerFunc {
 }
 
 type updateCStockQuantityRequest struct {
-	CreatorID int64  `json:"creator_id"`
-	StockID   int64  `json:"stock_id"`
-	Quantity  string `json:"quantity"`
+	StockID  int64  `json:"stock_id"`
+	Quantity string `json:"quantity"`
 }
 
 // UpdateCStockQuantity updates the quantity of a
@@ -333,8 +332,10 @@ func (s *Server) UpdateCStockQuantity(ctx context.Context) http.HandlerFunc {
 	req := new(updateCStockQuantityRequest)
 	return func(rw http.ResponseWriter, r *http.Request) {
 		json.NewDecoder(r.Body).Decode(&req)
+		param, _ := strconv.Atoi(chi.URLParam(r, "id"))
+		id := int64(param)
 		arg := db.UpdateCreatorStockQuantityParams{
-			CreatorID: req.CreatorID,
+			CreatorID: id,
 			StockID:   req.StockID,
 			Quantity:  req.Quantity,
 		}
@@ -345,13 +346,24 @@ func (s *Server) UpdateCStockQuantity(ctx context.Context) http.HandlerFunc {
 	}
 }
 
+type deleteStockFromCreatorPortfolioRequest struct {
+	CreatorID int64 `json:"creator_id"`
+	StockID   int64 `json:"stock_id"`
+}
+
 // DeleteStockFromCreatorPortfolio deletes the stocks
 // when a user sells them all
 func (s *Server) DeleteStockFromCreatorPortfolio(ctx context.Context) http.HandlerFunc {
+	req := new(deleteStockFromCreatorPortfolioRequest)
 	return func(rw http.ResponseWriter, r *http.Request) {
+		json.NewDecoder(r.Body).Decode(&req)
 		param, _ := strconv.Atoi(chi.URLParam(r, "id"))
 		id := int64(param)
-		if err := s.store.DeleteStockFromCreatorPortfolio(ctx, id); err != nil {
+		arg := db.DeleteStockFromCreatorPortfolioParams{
+			CreatorID: id,
+			StockID:   req.StockID,
+		}
+		if err := s.store.DeleteStockFromCreatorPortfolio(ctx, arg); err != nil {
 			http.Error(rw, "error deleting the stock", http.StatusInternalServerError)
 			return
 		}
