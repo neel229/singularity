@@ -198,7 +198,8 @@ func (s *Store) VTradeTx(ctx context.Context, arg VTradeTxParams) (VTradeTxResul
 			quantity3 := quantity1 + quantity2
 			quantity := strconv.FormatFloat(quantity3, 'e', 6, 64)
 			arg4 := UpdateFanStockQuantityParams{
-				ID:       arg.FanID,
+				FanID:    arg.FanID,
+				StockID:  arg.StockID,
 				Quantity: quantity,
 			}
 			if err = s.UpdateFanStockQuantity(ctx, arg4); err != nil {

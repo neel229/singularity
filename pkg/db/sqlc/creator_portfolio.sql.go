@@ -33,11 +33,17 @@ func (q *Queries) CreateCreatorPortfolio(ctx context.Context, arg CreateCreatorP
 
 const deleteStockFromCreatorPortfolio = `-- name: DeleteStockFromCreatorPortfolio :exec
 DELETE FROM creator_portfolio
-WHERE id = $1
+WHERE stock_id = $2
+  and creator_id = $1
 `
 
-func (q *Queries) DeleteStockFromCreatorPortfolio(ctx context.Context, id int64) error {
-	_, err := q.db.ExecContext(ctx, deleteStockFromCreatorPortfolio, id)
+type DeleteStockFromCreatorPortfolioParams struct {
+	CreatorID int64 `json:"creator_id"`
+	StockID   int64 `json:"stock_id"`
+}
+
+func (q *Queries) DeleteStockFromCreatorPortfolio(ctx context.Context, arg DeleteStockFromCreatorPortfolioParams) error {
+	_, err := q.db.ExecContext(ctx, deleteStockFromCreatorPortfolio, arg.CreatorID, arg.StockID)
 	return err
 }
 
@@ -45,7 +51,6 @@ const getPortfolioByCreatorID = `-- name: GetPortfolioByCreatorID :one
 SELECT id, creator_id, stock_id, quantity
 FROM creator_portfolio
 WHERE creator_id = $1
-LIMIT 1
 `
 
 func (q *Queries) GetPortfolioByCreatorID(ctx context.Context, creatorID int64) (CreatorPortfolio, error) {

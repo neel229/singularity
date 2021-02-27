@@ -58,7 +58,11 @@ func TestUpdateCreatorStockQuantity(t *testing.T) {
 
 func TestDeleteStockFromCreatorPortfolio(t *testing.T) {
 	portfolio := createRandomCreatorPortfolio(t)
-	err := testQueries.DeleteStockFromCreatorPortfolio(context.Background(), portfolio.StockID)
+	arg := DeleteStockFromCreatorPortfolioParams{
+		CreatorID: portfolio.CreatorID,
+		StockID:   portfolio.StockID,
+	}
+	err := testQueries.DeleteStockFromCreatorPortfolio(context.Background(), arg)
 	require.NoError(t, err)
 
 	portfolio1, err := testQueries.GetPortfolioByCreatorID(context.Background(), portfolio.CreatorID)

@@ -30,19 +30,6 @@ func TestCreateFanPortfolio(t *testing.T) {
 	createRandomFanPortfolio(t)
 }
 
-func TestGetFanPortfolio(t *testing.T) {
-	portfolio := createRandomFanPortfolio(t)
-	portfolio1, err := testQueries.GetFanPortfolio(context.Background(), portfolio.ID)
-	require.NoError(t, err)
-	require.NotEmpty(t, portfolio1)
-
-	require.Equal(t, portfolio.FanID, portfolio1.FanID)
-	require.Equal(t, portfolio.StockID, portfolio1.StockID)
-	require.Equal(t, portfolio.Quantity, portfolio1.Quantity)
-
-	require.NotZero(t, portfolio1.ID)
-}
-
 func TestGetPortfolioByFanID(t *testing.T) {
 	portfolio := createRandomFanPortfolio(t)
 	portfolio1, err := testQueries.GetPortfolioByFanID(context.Background(), portfolio.FanID)
@@ -60,7 +47,8 @@ func TestUpdateFanStockQuantity(t *testing.T) {
 	portfolio := createRandomFanPortfolio(t)
 
 	arg := UpdateFanStockQuantityParams{
-		ID:       portfolio.ID,
+		FanID:    portfolio.FanID,
+		StockID:  portfolio.StockID,
 		Quantity: "65.000000",
 	}
 
@@ -70,9 +58,13 @@ func TestUpdateFanStockQuantity(t *testing.T) {
 
 func TestDeleteStockFromFanPortfolio(t *testing.T) {
 	portfolio := createRandomFanPortfolio(t)
-	err := testQueries.DeleteStockFromFanPortfolio(context.Background(), portfolio.StockID)
+	arg := DeleteStockFromFanPortfolioParams{
+		FanID:   portfolio.FanID,
+		StockID: portfolio.StockID,
+	}
+	err := testQueries.DeleteStockFromFanPortfolio(context.Background(), arg)
 	require.NoError(t, err)
 
-	portfolio1, err := testQueries.GetFanPortfolio(context.Background(), portfolio.ID)
+	portfolio1, err := testQueries.GetPortfolioByFanID(context.Background(), portfolio.FanID)
 	require.Empty(t, portfolio1.StockID)
 }
