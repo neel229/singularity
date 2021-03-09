@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -42,6 +43,7 @@ func (s *Server) CreateCreatorAndStock(ctx context.Context) http.HandlerFunc {
 
 		results, err := s.store.StockCreationTx(ctx, arg)
 		if err != nil {
+			log.Fatal(err)
 			http.Error(w, "error writing data to db", http.StatusInternalServerError)
 			return
 		}

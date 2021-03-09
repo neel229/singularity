@@ -42,6 +42,7 @@ func (s *Server) CreateCurrency(ctx context.Context) http.HandlerFunc {
 // based on the id supplied
 func (s *Server) GetCurrency(ctx context.Context) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
+		rw.Header().Add("Access-Control-Allow-Origin", "*")
 		param, _ := strconv.Atoi(chi.URLParam(r, "id"))
 		id := int64(param)
 		currency, err := s.store.GetCurrency(ctx, id)

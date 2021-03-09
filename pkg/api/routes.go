@@ -3,12 +3,24 @@ package api
 import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/cors"
 )
 
 // SetRoutes sets the routes with
 // corresponding handler functions
 func (s *Server) SetRoutes() {
 	s.r.Use(middleware.Logger)
+	s.r.Use(cors.Handler(
+		cors.Options{
+			AllowedOrigins: []string{"*"},
+			// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
+			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+			AllowedHeaders:   []string{"X-PINGOTHER", "Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+			ExposedHeaders:   []string{"Link"},
+			AllowCredentials: false,
+			MaxAge:           300, // Maximum value not ignored by any of major browsers
+		},
+	))
 	s.currencyRoutes()
 	s.currencyRateRoutes()
 	s.fanRoutes()
@@ -17,6 +29,7 @@ func (s *Server) SetRoutes() {
 	s.vofferRoutes()
 	s.vtradeRoutes()
 }
+
 
 // Sets up routes for currency
 func (s *Server) currencyRoutes() {
