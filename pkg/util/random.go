@@ -21,6 +21,12 @@ func RandomInt(min, max int64) int64 {
 	return min + rand.Int63n(max-min+1)
 }
 
+// RandomInt32 generates a random number
+// between min and max
+func RandomInt32(min, max int64) int32 {
+	return int32(min + rand.Int63n(max-min+1))
+}
+
 // RandomString generates a random string
 // of length of n
 func RandomString(n int) string {

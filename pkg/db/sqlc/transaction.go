@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	"strconv"
+
+	"github.com/neel229/forum/pkg/util"
 )
 
 // Store provides all the functions to execute
@@ -98,14 +100,15 @@ func (s *Store) StockCreationTx(ctx context.Context, arg StockCreationTxParams) 
 			return err
 		}
 
+		mintPrice := util.RandomInt32(10, 50)
 		// Create an entry in  creator stock table
 		// with creatorID and stockID from above two
 		// queries
 		arg3 := CreateCreatorStockParams{
 			CreatorID:    result.Creator.ID,
 			StockID:      result.Stock.ID,
-			MintPrice:    10,
-			CurrentPrice: 10,
+			MintPrice:    mintPrice,
+			CurrentPrice: mintPrice,
 		}
 		result.CreatorStock, err = q.CreateCreatorStock(ctx, arg3)
 		if err != nil {
