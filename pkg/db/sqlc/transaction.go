@@ -102,8 +102,10 @@ func (s *Store) StockCreationTx(ctx context.Context, arg StockCreationTxParams) 
 		// with creatorID and stockID from above two
 		// queries
 		arg3 := CreateCreatorStockParams{
-			CreatorID: result.Creator.ID,
-			StockID:   result.Stock.ID,
+			CreatorID:    result.Creator.ID,
+			StockID:      result.Stock.ID,
+			MintPrice:    10,
+			CurrentPrice: 10,
 		}
 		result.CreatorStock, err = q.CreateCreatorStock(ctx, arg3)
 		if err != nil {

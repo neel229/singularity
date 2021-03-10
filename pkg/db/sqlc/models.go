@@ -29,9 +29,11 @@ type CreatorPortfolio struct {
 }
 
 type CreatorStock struct {
-	ID        int64 `json:"id"`
-	CreatorID int64 `json:"creator_id"`
-	StockID   int64 `json:"stock_id"`
+	ID           int64 `json:"id"`
+	CreatorID    int64 `json:"creator_id"`
+	StockID      int64 `json:"stock_id"`
+	MintPrice    int32 `json:"mint_price"`
+	CurrentPrice int32 `json:"current_price"`
 }
 
 type Currency struct {
@@ -78,15 +80,6 @@ type Offer struct {
 	Sell     bool      `json:"sell"`
 	Price    string    `json:"price"`
 	Ts       time.Time `json:"ts"`
-}
-
-type Price struct {
-	ID         int64     `json:"id"`
-	StockID    int64     `json:"stock_id"`
-	CurrencyID int64     `json:"currency_id"`
-	Buy        string    `json:"buy"`
-	Sell       string    `json:"sell"`
-	Ts         time.Time `json:"ts"`
 }
 
 type Report struct {

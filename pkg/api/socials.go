@@ -69,3 +69,4 @@ func GetData(channelID string, apiKey string) (Items, error) {
 	// Items array, so we just send that back
 	return response.Items[0], nil
 }
+
