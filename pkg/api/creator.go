@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-chi/chi"
 	db "github.com/neel229/forum/pkg/db/sqlc"
+	"github.com/neel229/forum/pkg/util"
 )
 
 // Logic for creating a creator account
@@ -30,12 +31,18 @@ func (s *Server) CreateCreatorAndStock(ctx context.Context) http.HandlerFunc {
 	req := new(createCreatorRequest)
 	return func(w http.ResponseWriter, r *http.Request) {
 		json.NewDecoder(r.Body).Decode(&req)
+		hashedPassword, err := util.HashPassword(req.Password)
+		if err != nil {
+			log.Fatalf("there was an error encrypting the password: %v", err)
+			http.Error(w, "error encrypting password", http.StatusInternalServerError)
+			return
+		}
 		arg := db.StockCreationTxParams{
 			FirstName:           req.FirstName,
 			LastName:            req.LastName,
 			UserName:            req.UserName,
 			Email:               req.Email,
-			Password:            req.Password,
+			Password:            hashedPassword,
 			PreferredCurrencyID: req.PreferredCurrencyID,
 			Ticker:              req.Ticker,
 			Details:             req.Details,
