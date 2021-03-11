@@ -57,13 +57,11 @@ func (s *Server) GetCurrency(ctx context.Context) http.HandlerFunc {
 // tradable on the platform
 func (s *Server) ListCurrencies(ctx context.Context) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		param, _ := strconv.Atoi(chi.URLParam(r, "limit"))
-		param2, _ := strconv.Atoi(chi.URLParam(r, "offset"))
-		limit := int32(param)
-		offset := int32(param2)
+		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+		offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
 		arg := db.ListCurrenciesParams{
-			Limit:  limit,
-			Offset: offset,
+			Limit:  int32(limit),
+			Offset: int32(offset),
 		}
 		currencies, err := s.store.ListCurrencies(ctx, arg)
 		if err != nil {

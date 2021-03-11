@@ -33,7 +33,7 @@ func (s *Server) SetRoutes() {
 // Sets up routes for currency
 func (s *Server) currencyRoutes() {
 	s.r.Route("/currency", func(r chi.Router) {
-		r.Get("/{limit}{offset}", s.ListCurrencies(s.ctx))
+		r.Get("/", s.ListCurrencies(s.ctx))
 		r.Post("/", s.CreateCurrency(s.ctx))
 
 		// Subroutes for currency
@@ -79,7 +79,7 @@ func (s *Server) fanRoutes() {
 // Setup all the routes surrounding a creator
 func (s *Server) creatorRoutes() {
 	s.r.Route("/creator", func(r chi.Router) {
-		r.Get("/{limit}{offset}", s.ListCreators(s.ctx))
+		r.Get("/", s.ListCreators(s.ctx))
 		r.Post("/", s.CreateCreatorAndStock(s.ctx))
 
 		r.Route("/{id}", func(r chi.Router) {
@@ -97,7 +97,7 @@ func (s *Server) creatorRoutes() {
 			})
 		})
 		r.Route("/stock", func(r chi.Router) {
-			r.Get("/{limit}{offset}", s.ListCreatorStocks(s.ctx))
+			r.Get("/", s.ListCreatorStocks(s.ctx))
 			r.Get("/{id}", s.GetCreatorStock(s.ctx))
 		})
 	})
@@ -105,7 +105,7 @@ func (s *Server) creatorRoutes() {
 
 func (s *Server) stockRoutes() {
 	s.r.Route("/stock", func(r chi.Router) {
-		r.Get("/{limit}{offset}", s.ListStocks(s.ctx))
+		r.Get("/", s.ListStocks(s.ctx))
 
 		r.Route("/{id}", func(r chi.Router) {
 			r.Get("/", s.GetStock(s.ctx))
@@ -116,7 +116,7 @@ func (s *Server) stockRoutes() {
 
 func (s *Server) vofferRoutes() {
 	s.r.Route("/voffers", func(r chi.Router) {
-		r.Get("/{limit}{offset}", s.ListVirginOffers(s.ctx))
+		r.Get("/", s.ListVirginOffers(s.ctx))
 		r.Post("/", s.CreateVirginOffer(s.ctx))
 
 		r.Route("/{id}", func(r chi.Router) {

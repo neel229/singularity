@@ -71,13 +71,11 @@ func (s *Server) GetVirginOfferByCreator(ctx context.Context) http.HandlerFunc {
 // currently present on the platform
 func (s *Server) ListVirginOffers(ctx context.Context) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		param, _ := strconv.Atoi(chi.URLParam(r, "limit"))
-		param2, _ := strconv.Atoi(chi.URLParam(r, "offset"))
-		limit := int32(param)
-		offset := int32(param2)
+		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+		offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
 		arg := db.ListVirginOffersParams{
-			Limit:  limit,
-			Offset: offset,
+			Limit:  int32(limit),
+			Offset: int32(offset),
 		}
 		offers, err := s.store.ListVirginOffers(ctx, arg)
 		if err != nil {

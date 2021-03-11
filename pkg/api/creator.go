@@ -94,13 +94,11 @@ func (s *Server) GetVirginTokensLeft(ctx context.Context) http.HandlerFunc {
 // present on the platform
 func (s *Server) ListCreators(ctx context.Context) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		param, _ := strconv.Atoi(chi.URLParam(r, "limit"))
-		param2, _ := strconv.Atoi(chi.URLParam(r, "offset"))
-		limit := int32(param)
-		offset := int32(param2)
+		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+		offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
 		arg := db.ListCreatorsParams{
-			Limit:  limit,
-			Offset: offset,
+			Limit:  int32(limit),
+			Offset: int32(offset),
 		}
 		creators, err := s.store.ListCreators(ctx, arg)
 		if err != nil {
@@ -224,13 +222,11 @@ func (s *Server) GetStock(ctx context.Context) http.HandlerFunc {
 // available for trading on the platform
 func (s *Server) ListStocks(ctx context.Context) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		param, _ := strconv.Atoi(chi.URLParam(r, "limit"))
-		param2, _ := strconv.Atoi(chi.URLParam(r, "offset"))
-		limit := int32(param)
-		offset := int32(param2)
+		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+		offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
 		arg := db.ListStocksParams{
-			Limit:  limit,
-			Offset: offset,
+			Limit:  int32(limit),
+			Offset: int32(offset),
 		}
 		stocks, err := s.store.ListStocks(ctx, arg)
 		if err != nil {
@@ -287,13 +283,11 @@ func (s *Server) GetCreatorStock(ctx context.Context) http.HandlerFunc {
 // creators and their corresponding stocks
 func (s *Server) ListCreatorStocks(ctx context.Context) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		param, _ := strconv.Atoi(chi.URLParam(r, "limit"))
-		param2, _ := strconv.Atoi(chi.URLParam(r, "offset"))
-		limit := int32(param)
-		offset := int32(param2)
+		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+		offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
 		arg := db.ListCreatorStocksParams{
-			Limit:  limit,
-			Offset: offset,
+			Limit:  int32(limit),
+			Offset: int32(offset),
 		}
 		creatorStocks, err := s.store.ListCreatorStocks(ctx, arg)
 		if err != nil {
