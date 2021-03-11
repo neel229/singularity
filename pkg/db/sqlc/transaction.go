@@ -90,25 +90,26 @@ func (s *Store) StockCreationTx(ctx context.Context, arg StockCreationTxParams) 
 			return err
 		}
 
+		mintPrice := util.RandomInt32(10, 50)
+
 		// Create a creator's stock
 		arg2 := CreateStockParams{
-			Ticker:  arg.Ticker,
-			Details: arg.Details,
+			Ticker:       arg.Ticker,
+			Details:      arg.Details,
+			MintPrice:    mintPrice,
+			CurrentPrice: mintPrice,
 		}
 		result.Stock, err = q.CreateStock(ctx, arg2)
 		if err != nil {
 			return err
 		}
 
-		mintPrice := util.RandomInt32(10, 50)
 		// Create an entry in  creator stock table
 		// with creatorID and stockID from above two
 		// queries
 		arg3 := CreateCreatorStockParams{
-			CreatorID:    result.Creator.ID,
-			StockID:      result.Stock.ID,
-			MintPrice:    mintPrice,
-			CurrentPrice: mintPrice,
+			CreatorID: result.Creator.ID,
+			StockID:   result.Stock.ID,
 		}
 		result.CreatorStock, err = q.CreateCreatorStock(ctx, arg3)
 		if err != nil {

@@ -8,38 +8,25 @@ import (
 )
 
 const createCreatorStock = `-- name: CreateCreatorStock :one
-INSERT INTO creator_stock (creator_id, stock_id, mint_price, current_price)
-VALUES ($1, $2, $3, $4)
-RETURNING id, creator_id, stock_id, mint_price, current_price
+INSERT INTO creator_stock (creator_id, stock_id)
+VALUES ($1, $2)
+RETURNING id, creator_id, stock_id
 `
 
 type CreateCreatorStockParams struct {
-	CreatorID    int64 `json:"creator_id"`
-	StockID      int64 `json:"stock_id"`
-	MintPrice    int32 `json:"mint_price"`
-	CurrentPrice int32 `json:"current_price"`
+	CreatorID int64 `json:"creator_id"`
+	StockID   int64 `json:"stock_id"`
 }
 
 func (q *Queries) CreateCreatorStock(ctx context.Context, arg CreateCreatorStockParams) (CreatorStock, error) {
-	row := q.db.QueryRowContext(ctx, createCreatorStock,
-		arg.CreatorID,
-		arg.StockID,
-		arg.MintPrice,
-		arg.CurrentPrice,
-	)
+	row := q.db.QueryRowContext(ctx, createCreatorStock, arg.CreatorID, arg.StockID)
 	var i CreatorStock
-	err := row.Scan(
-		&i.ID,
-		&i.CreatorID,
-		&i.StockID,
-		&i.MintPrice,
-		&i.CurrentPrice,
-	)
+	err := row.Scan(&i.ID, &i.CreatorID, &i.StockID)
 	return i, err
 }
 
 const getCreatorStock = `-- name: GetCreatorStock :one
-SELECT id, creator_id, stock_id, mint_price, current_price
+SELECT id, creator_id, stock_id
 FROM creator_stock
 WHERE id = $1
 LIMIT 1
@@ -48,18 +35,12 @@ LIMIT 1
 func (q *Queries) GetCreatorStock(ctx context.Context, id int64) (CreatorStock, error) {
 	row := q.db.QueryRowContext(ctx, getCreatorStock, id)
 	var i CreatorStock
-	err := row.Scan(
-		&i.ID,
-		&i.CreatorID,
-		&i.StockID,
-		&i.MintPrice,
-		&i.CurrentPrice,
-	)
+	err := row.Scan(&i.ID, &i.CreatorID, &i.StockID)
 	return i, err
 }
 
 const listCreatorStocks = `-- name: ListCreatorStocks :many
-SELECT id, creator_id, stock_id, mint_price, current_price
+SELECT id, creator_id, stock_id
 FROM creator_stock
 ORDER BY id
 LIMIT $1 OFFSET $2
@@ -79,13 +60,7 @@ func (q *Queries) ListCreatorStocks(ctx context.Context, arg ListCreatorStocksPa
 	var items []CreatorStock
 	for rows.Next() {
 		var i CreatorStock
-		if err := rows.Scan(
-			&i.ID,
-			&i.CreatorID,
-			&i.StockID,
-			&i.MintPrice,
-			&i.CurrentPrice,
-		); err != nil {
+		if err := rows.Scan(&i.ID, &i.CreatorID, &i.StockID); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -97,20 +72,4 @@ func (q *Queries) ListCreatorStocks(ctx context.Context, arg ListCreatorStocksPa
 		return nil, err
 	}
 	return items, nil
-}
-
-const updateStockPrice = `-- name: UpdateStockPrice :exec
-UPDATE creator_stock
-SET current_price = $2
-WHERE creator_id = $1
-`
-
-type UpdateStockPriceParams struct {
-	CreatorID    int64 `json:"creator_id"`
-	CurrentPrice int32 `json:"current_price"`
-}
-
-func (q *Queries) UpdateStockPrice(ctx context.Context, arg UpdateStockPriceParams) error {
-	_, err := q.db.ExecContext(ctx, updateStockPrice, arg.CreatorID, arg.CurrentPrice)
-	return err
 }

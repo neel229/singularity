@@ -8,20 +8,33 @@ import (
 )
 
 const createStock = `-- name: CreateStock :one
-INSERT INTO stock (ticker, details)
-VALUES ($1, $2)
-RETURNING id, ticker, details
+INSERT INTO stock (ticker, details, mint_price, current_price)
+VALUES ($1, $2, $3, $4)
+RETURNING id, ticker, details, mint_price, current_price
 `
 
 type CreateStockParams struct {
-	Ticker  string `json:"ticker"`
-	Details string `json:"details"`
+	Ticker       string `json:"ticker"`
+	Details      string `json:"details"`
+	MintPrice    int32  `json:"mint_price"`
+	CurrentPrice int32  `json:"current_price"`
 }
 
 func (q *Queries) CreateStock(ctx context.Context, arg CreateStockParams) (Stock, error) {
-	row := q.db.QueryRowContext(ctx, createStock, arg.Ticker, arg.Details)
+	row := q.db.QueryRowContext(ctx, createStock,
+		arg.Ticker,
+		arg.Details,
+		arg.MintPrice,
+		arg.CurrentPrice,
+	)
 	var i Stock
-	err := row.Scan(&i.ID, &i.Ticker, &i.Details)
+	err := row.Scan(
+		&i.ID,
+		&i.Ticker,
+		&i.Details,
+		&i.MintPrice,
+		&i.CurrentPrice,
+	)
 	return i, err
 }
 
@@ -36,7 +49,7 @@ func (q *Queries) DeleteStock(ctx context.Context, id int64) error {
 }
 
 const getStock = `-- name: GetStock :one
-SELECT id, ticker, details
+SELECT id, ticker, details, mint_price, current_price
 FROM stock
 WHERE id = $1
 LIMIT 1
@@ -45,12 +58,18 @@ LIMIT 1
 func (q *Queries) GetStock(ctx context.Context, id int64) (Stock, error) {
 	row := q.db.QueryRowContext(ctx, getStock, id)
 	var i Stock
-	err := row.Scan(&i.ID, &i.Ticker, &i.Details)
+	err := row.Scan(
+		&i.ID,
+		&i.Ticker,
+		&i.Details,
+		&i.MintPrice,
+		&i.CurrentPrice,
+	)
 	return i, err
 }
 
 const listStocks = `-- name: ListStocks :many
-SELECT id, ticker, details
+SELECT id, ticker, details, mint_price, current_price
 FROM stock
 ORDER BY id
 LIMIT $1 OFFSET $2
@@ -70,7 +89,13 @@ func (q *Queries) ListStocks(ctx context.Context, arg ListStocksParams) ([]Stock
 	var items []Stock
 	for rows.Next() {
 		var i Stock
-		if err := rows.Scan(&i.ID, &i.Ticker, &i.Details); err != nil {
+		if err := rows.Scan(
+			&i.ID,
+			&i.Ticker,
+			&i.Details,
+			&i.MintPrice,
+			&i.CurrentPrice,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -97,5 +122,21 @@ type UpdateStockParams struct {
 
 func (q *Queries) UpdateStock(ctx context.Context, arg UpdateStockParams) error {
 	_, err := q.db.ExecContext(ctx, updateStock, arg.ID, arg.Details)
+	return err
+}
+
+const updateStockPrice = `-- name: UpdateStockPrice :exec
+UPDATE stock
+SET current_price = $2
+WHERE ticker = $1
+`
+
+type UpdateStockPriceParams struct {
+	Ticker       string `json:"ticker"`
+	CurrentPrice int32  `json:"current_price"`
+}
+
+func (q *Queries) UpdateStockPrice(ctx context.Context, arg UpdateStockPriceParams) error {
+	_, err := q.db.ExecContext(ctx, updateStockPrice, arg.Ticker, arg.CurrentPrice)
 	return err
 }
