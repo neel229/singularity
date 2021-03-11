@@ -13,7 +13,7 @@ func createRandomFan(t *testing.T) Fan {
 		LastName:            "Modi",
 		UserName:            "neel229",
 		Email:               "djfksdjfk",
-		Password:            "dfjskfjsd",
+		Password:            "slafj",
 		PreferredCurrencyID: 3,
 	}
 	fan, err := testQueries.CreateFan(context.Background(), arg)

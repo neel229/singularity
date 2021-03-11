@@ -22,13 +22,6 @@ func main() {
 		log.Fatalf("there was an error creating connection with database: %v", err)
 	}
 
-	data, err := api.GetData("UCG8rbF3g2AMX70yOd8vqIZg", config.YtKey)
-	if err != nil {
-		log.Fatalf("error fetching data: %v\n", err)
-	}
-
-	fmt.Printf("%+v", data)
-
 	store := db.NewStore(conn)
 	server := api.NewServer(store)
 	server.SetRoutes()

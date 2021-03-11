@@ -19,7 +19,7 @@ var testDB *sql.DB
 // for testing
 func TestMain(m *testing.M) {
 	var err error
-	config, err := util.LoadConfig("../..")
+	config, err := util.LoadConfig("../../../")
 	if err != nil {
 		log.Fatalf("error loading config: %v", err)
 	}
