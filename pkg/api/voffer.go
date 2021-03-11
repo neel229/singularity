@@ -67,20 +67,15 @@ func (s *Server) GetVirginOfferByCreator(ctx context.Context) http.HandlerFunc {
 	}
 }
 
-type listVirginOffersRequest struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
 // ListVirginOffers returns a list of all the virgin offers
 // currently present on the platform
 func (s *Server) ListVirginOffers(ctx context.Context) http.HandlerFunc {
-	req := new(listVirginOffersRequest)
 	return func(rw http.ResponseWriter, r *http.Request) {
-		json.NewDecoder(r.Body).Decode(&req)
+		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+		offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
 		arg := db.ListVirginOffersParams{
-			Limit:  req.Limit,
-			Offset: req.Offset,
+			Limit:  int32(limit),
+			Offset: int32(offset),
 		}
 		offers, err := s.store.ListVirginOffers(ctx, arg)
 		if err != nil {

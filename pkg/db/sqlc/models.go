@@ -80,15 +80,6 @@ type Offer struct {
 	Ts       time.Time `json:"ts"`
 }
 
-type Price struct {
-	ID         int64     `json:"id"`
-	StockID    int64     `json:"stock_id"`
-	CurrencyID int64     `json:"currency_id"`
-	Buy        string    `json:"buy"`
-	Sell       string    `json:"sell"`
-	Ts         time.Time `json:"ts"`
-}
-
 type Report struct {
 	ID          int64     `json:"id"`
 	TradingDate time.Time `json:"trading_date"`
@@ -104,9 +95,11 @@ type Report struct {
 }
 
 type Stock struct {
-	ID      int64  `json:"id"`
-	Ticker  string `json:"ticker"`
-	Details string `json:"details"`
+	ID           int64  `json:"id"`
+	Ticker       string `json:"ticker"`
+	Details      string `json:"details"`
+	MintPrice    int32  `json:"mint_price"`
+	CurrentPrice int32  `json:"current_price"`
 }
 
 type Trade struct {

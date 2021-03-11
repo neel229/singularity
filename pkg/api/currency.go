@@ -53,20 +53,15 @@ func (s *Server) GetCurrency(ctx context.Context) http.HandlerFunc {
 	}
 }
 
-type listCurrenciesRequest struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
 // ListCurrencies lists all the currencies
 // tradable on the platform
 func (s *Server) ListCurrencies(ctx context.Context) http.HandlerFunc {
-	req := new(listCurrenciesRequest)
 	return func(rw http.ResponseWriter, r *http.Request) {
-		json.NewDecoder(r.Body).Decode(&req)
+		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+		offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
 		arg := db.ListCurrenciesParams{
-			Limit:  req.Limit,
-			Offset: req.Offset,
+			Limit:  int32(limit),
+			Offset: int32(offset),
 		}
 		currencies, err := s.store.ListCurrencies(ctx, arg)
 		if err != nil {

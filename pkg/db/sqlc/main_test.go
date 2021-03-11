@@ -7,11 +7,7 @@ import (
 	"testing"
 
 	_ "github.com/lib/pq"
-)
-
-const (
-	driverName = "postgres"
-	dataSource = "postgresql://root:postgres@localhost:5432/stockmarket-simulator?sslmode=disable"
+	"github.com/neel229/forum/pkg/util"
 )
 
 // We will use testQueries throughout our application
@@ -23,7 +19,11 @@ var testDB *sql.DB
 // for testing
 func TestMain(m *testing.M) {
 	var err error
-	testDB, err = sql.Open(driverName, dataSource)
+	config, err := util.LoadConfig("../../../")
+	if err != nil {
+		log.Fatalf("error loading config: %v", err)
+	}
+	testDB, err = sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatalf("There was an error connecting the database: %v", err)
 	}

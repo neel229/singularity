@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 	"strconv"
+
+	"github.com/neel229/forum/pkg/util"
 )
 
 // Store provides all the functions to execute
@@ -88,10 +90,14 @@ func (s *Store) StockCreationTx(ctx context.Context, arg StockCreationTxParams) 
 			return err
 		}
 
+		mintPrice := util.RandomInt32(10, 50)
+
 		// Create a creator's stock
 		arg2 := CreateStockParams{
-			Ticker:  arg.Ticker,
-			Details: arg.Details,
+			Ticker:       arg.Ticker,
+			Details:      arg.Details,
+			MintPrice:    mintPrice,
+			CurrentPrice: mintPrice,
 		}
 		result.Stock, err = q.CreateStock(ctx, arg2)
 		if err != nil {

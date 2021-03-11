@@ -9,15 +9,22 @@ import (
 
 const createFan = `-- name: CreateFan :one
 INSERT INTO fan (
-  first_name,
-  last_name,
-  user_name,
-  password,
-  email,
-  preferred_currency_id
-  ) VALUES (
-  $1, $2, $3, $4, $5, $6
-) RETURNING id, first_name, last_name, user_name, password, email, time_registered, time_confirmed, preferred_currency_id
+    first_name,
+    last_name,
+    user_name,
+    password,
+    email,
+    preferred_currency_id
+  )
+VALUES (
+    $1,
+    $2,
+    $3,
+    $4,
+    $5,
+    $6
+  )
+RETURNING id, first_name, last_name, user_name, password, email, time_registered, time_confirmed, preferred_currency_id
 `
 
 type CreateFanParams struct {
@@ -54,7 +61,8 @@ func (q *Queries) CreateFan(ctx context.Context, arg CreateFanParams) (Fan, erro
 }
 
 const getFan = `-- name: GetFan :one
-SELECT id, first_name, last_name, user_name, password, email, time_registered, time_confirmed, preferred_currency_id FROM fan
+SELECT id, first_name, last_name, user_name, password, email, time_registered, time_confirmed, preferred_currency_id
+FROM fan
 WHERE id = $1
 LIMIT 1
 `

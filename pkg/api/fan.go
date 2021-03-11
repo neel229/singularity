@@ -3,11 +3,13 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi"
 	db "github.com/neel229/forum/pkg/db/sqlc"
+	"github.com/neel229/forum/pkg/util"
 )
 
 type createFanRequest struct {
@@ -24,16 +26,23 @@ func (s *Server) CreateFan(ctx context.Context) http.HandlerFunc {
 	req := new(createFanRequest)
 	return func(rw http.ResponseWriter, r *http.Request) {
 		json.NewDecoder(r.Body).Decode(&req)
+		hashedPassword, err := util.HashPassword(req.Password)
+		if err != nil {
+			log.Fatalf("error encrypting password")
+			http.Error(rw, "internal server error", http.StatusInternalServerError)
+			return
+		}
 		arg := db.CreateFanParams{
 			FirstName:           req.FirstName,
 			LastName:            req.LastName,
 			UserName:            req.UserName,
-			Password:            req.Password,
+			Password:            hashedPassword,
 			Email:               req.Email,
 			PreferredCurrencyID: req.PreferredCurrencyID,
 		}
 		fan, err := s.store.CreateFan(ctx, arg)
 		if err != nil {
+			log.Fatalf("error %v", err)
 			http.Error(rw, "error creating fan", http.StatusBadRequest)
 			return
 		}

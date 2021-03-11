@@ -3,11 +3,13 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi"
 	db "github.com/neel229/forum/pkg/db/sqlc"
+	"github.com/neel229/forum/pkg/util"
 )
 
 // Logic for creating a creator account
@@ -29,12 +31,18 @@ func (s *Server) CreateCreatorAndStock(ctx context.Context) http.HandlerFunc {
 	req := new(createCreatorRequest)
 	return func(w http.ResponseWriter, r *http.Request) {
 		json.NewDecoder(r.Body).Decode(&req)
+		hashedPassword, err := util.HashPassword(req.Password)
+		if err != nil {
+			log.Fatalf("there was an error encrypting the password: %v", err)
+			http.Error(w, "error encrypting password", http.StatusInternalServerError)
+			return
+		}
 		arg := db.StockCreationTxParams{
 			FirstName:           req.FirstName,
 			LastName:            req.LastName,
 			UserName:            req.UserName,
 			Email:               req.Email,
-			Password:            req.Password,
+			Password:            hashedPassword,
 			PreferredCurrencyID: req.PreferredCurrencyID,
 			Ticker:              req.Ticker,
 			Details:             req.Details,
@@ -42,6 +50,7 @@ func (s *Server) CreateCreatorAndStock(ctx context.Context) http.HandlerFunc {
 
 		results, err := s.store.StockCreationTx(ctx, arg)
 		if err != nil {
+			log.Fatal(err)
 			http.Error(w, "error writing data to db", http.StatusInternalServerError)
 			return
 		}
@@ -81,20 +90,15 @@ func (s *Server) GetVirginTokensLeft(ctx context.Context) http.HandlerFunc {
 	}
 }
 
-type listCreatorsRequest struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
 // ListCreators returns the list of creators
 // present on the platform
 func (s *Server) ListCreators(ctx context.Context) http.HandlerFunc {
-	req := new(listCreatorsRequest)
 	return func(rw http.ResponseWriter, r *http.Request) {
-		json.NewDecoder(r.Body).Decode(&req)
+		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+		offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
 		arg := db.ListCreatorsParams{
-			Limit:  req.Limit,
-			Offset: req.Offset,
+			Limit:  int32(limit),
+			Offset: int32(offset),
 		}
 		creators, err := s.store.ListCreators(ctx, arg)
 		if err != nil {
@@ -214,26 +218,22 @@ func (s *Server) GetStock(ctx context.Context) http.HandlerFunc {
 	}
 }
 
-type listStocksRequest struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
 // ListStocks returns a list of stocks
 // available for trading on the platform
 func (s *Server) ListStocks(ctx context.Context) http.HandlerFunc {
-	req := new(listStocksRequest)
 	return func(rw http.ResponseWriter, r *http.Request) {
-		json.NewDecoder(r.Body).Decode(&req)
+		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+		offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
 		arg := db.ListStocksParams{
-			Limit:  req.Limit,
-			Offset: req.Offset,
+			Limit:  int32(limit),
+			Offset: int32(offset),
 		}
 		stocks, err := s.store.ListStocks(ctx, arg)
 		if err != nil {
 			http.Error(rw, "error returning list of stocks", http.StatusInternalServerError)
 			return
 		}
+		log.Printf("%+v", stocks)
 		json.NewEncoder(rw).Encode(stocks)
 	}
 }
@@ -279,20 +279,15 @@ func (s *Server) GetCreatorStock(ctx context.Context) http.HandlerFunc {
 	}
 }
 
-type listCreatorStockRequest struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
 // ListCreatorStocks returns the mappings of
 // creators and their corresponding stocks
 func (s *Server) ListCreatorStocks(ctx context.Context) http.HandlerFunc {
-	req := new(listCreatorStockRequest)
 	return func(rw http.ResponseWriter, r *http.Request) {
-		json.NewDecoder(r.Body).Decode(&req)
+		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+		offset, _ := strconv.Atoi(r.URL.Query().Get("offset"))
 		arg := db.ListCreatorStocksParams{
-			Limit:  req.Limit,
-			Offset: req.Offset,
+			Limit:  int32(limit),
+			Offset: int32(offset),
 		}
 		creatorStocks, err := s.store.ListCreatorStocks(ctx, arg)
 		if err != nil {

@@ -8,18 +8,16 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/neel229/forum/pkg/api"
 	db "github.com/neel229/forum/pkg/db/sqlc"
-)
-
-// These values are to be
-// loaded from environment
-const (
-	driverName = "postgres"
-	dataSource = "postgresql://root:postgres@localhost:5432/stockmarket-simulator?sslmode=disable"
-	addr       = ":5000"
+	"github.com/neel229/forum/pkg/util"
 )
 
 func main() {
-	conn, err := sql.Open(driverName, dataSource)
+	config, err := util.LoadConfig(".")
+	if err != nil {
+		log.Fatalf("cannot read configurations: %v", err)
+	}
+
+	conn, err := sql.Open(config.DBDriver, config.DBSource)
 	if err != nil {
 		log.Fatalf("there was an error creating connection with database: %v", err)
 	}
@@ -27,6 +25,6 @@ func main() {
 	store := db.NewStore(conn)
 	server := api.NewServer(store)
 	server.SetRoutes()
-	fmt.Printf("starting a server on port %s", addr)
-	server.StartServer(addr)
+	fmt.Printf("starting a server on port %s\n", config.Addr)
+	server.StartServer(config.Addr)
 }

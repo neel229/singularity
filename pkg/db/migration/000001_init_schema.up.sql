@@ -14,15 +14,9 @@ CREATE TABLE "currency_rate" (
 CREATE TABLE "stock" (
   "id" bigserial PRIMARY KEY,
   "ticker" varchar(8) NOT NULL,
-  "details" text NOT NULL
-);
-CREATE TABLE "price" (
-  "id" bigserial PRIMARY KEY,
-  "stock_id" bigserial NOT NULL,
-  "currency_id" bigserial NOT NULL,
-  "buy" decimal(16, 6) NOT NULL,
-  "sell" decimal(16, 6) NOT NULL,
-  "ts" timestamptz NOT NULL DEFAULT (now())
+  "details" text NOT NULL,
+  "mint_price" int NOT NULL,
+  "current_price" int NOT NULL
 );
 CREATE TABLE "report" (
   "id" bigserial PRIMARY KEY,
@@ -119,16 +113,12 @@ ALTER TABLE "currency_rate"
 ADD FOREIGN KEY ("currency_id") REFERENCES "currency" ("id");
 ALTER TABLE "currency_rate"
 ADD FOREIGN KEY ("base_currency_id") REFERENCES "currency" ("id");
-ALTER TABLE "price"
-ADD FOREIGN KEY ("currency_id") REFERENCES "currency" ("id");
 ALTER TABLE "report"
 ADD FOREIGN KEY ("currency_id") REFERENCES "currency" ("id");
 ALTER TABLE "fan"
 ADD FOREIGN KEY ("preferred_currency_id") REFERENCES "currency" ("id");
 ALTER TABLE "creator"
 ADD FOREIGN KEY ("preferred_currency_id") REFERENCES "currency" ("id");
-ALTER TABLE "price"
-ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
 ALTER TABLE "report"
 ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
 ALTER TABLE "trade"
