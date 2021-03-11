@@ -42,7 +42,6 @@ func (s *Server) CreateCurrency(ctx context.Context) http.HandlerFunc {
 // based on the id supplied
 func (s *Server) GetCurrency(ctx context.Context) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
-		rw.Header().Add("Access-Control-Allow-Origin", "*")
 		param, _ := strconv.Atoi(chi.URLParam(r, "id"))
 		id := int64(param)
 		currency, err := s.store.GetCurrency(ctx, id)
@@ -54,20 +53,17 @@ func (s *Server) GetCurrency(ctx context.Context) http.HandlerFunc {
 	}
 }
 
-type listCurrenciesRequest struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
 // ListCurrencies lists all the currencies
 // tradable on the platform
 func (s *Server) ListCurrencies(ctx context.Context) http.HandlerFunc {
-	req := new(listCurrenciesRequest)
 	return func(rw http.ResponseWriter, r *http.Request) {
-		json.NewDecoder(r.Body).Decode(&req)
+		param, _ := strconv.Atoi(chi.URLParam(r, "limit"))
+		param2, _ := strconv.Atoi(chi.URLParam(r, "offset"))
+		limit := int32(param)
+		offset := int32(param2)
 		arg := db.ListCurrenciesParams{
-			Limit:  req.Limit,
-			Offset: req.Offset,
+			Limit:  limit,
+			Offset: offset,
 		}
 		currencies, err := s.store.ListCurrencies(ctx, arg)
 		if err != nil {

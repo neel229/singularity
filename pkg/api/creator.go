@@ -90,20 +90,17 @@ func (s *Server) GetVirginTokensLeft(ctx context.Context) http.HandlerFunc {
 	}
 }
 
-type listCreatorsRequest struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
 // ListCreators returns the list of creators
 // present on the platform
 func (s *Server) ListCreators(ctx context.Context) http.HandlerFunc {
-	req := new(listCreatorsRequest)
 	return func(rw http.ResponseWriter, r *http.Request) {
-		json.NewDecoder(r.Body).Decode(&req)
+		param, _ := strconv.Atoi(chi.URLParam(r, "limit"))
+		param2, _ := strconv.Atoi(chi.URLParam(r, "offset"))
+		limit := int32(param)
+		offset := int32(param2)
 		arg := db.ListCreatorsParams{
-			Limit:  req.Limit,
-			Offset: req.Offset,
+			Limit:  limit,
+			Offset: offset,
 		}
 		creators, err := s.store.ListCreators(ctx, arg)
 		if err != nil {
@@ -223,26 +220,24 @@ func (s *Server) GetStock(ctx context.Context) http.HandlerFunc {
 	}
 }
 
-type listStocksRequest struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
 // ListStocks returns a list of stocks
 // available for trading on the platform
 func (s *Server) ListStocks(ctx context.Context) http.HandlerFunc {
-	req := new(listStocksRequest)
 	return func(rw http.ResponseWriter, r *http.Request) {
-		json.NewDecoder(r.Body).Decode(&req)
+		param, _ := strconv.Atoi(chi.URLParam(r, "limit"))
+		param2, _ := strconv.Atoi(chi.URLParam(r, "offset"))
+		limit := int32(param)
+		offset := int32(param2)
 		arg := db.ListStocksParams{
-			Limit:  req.Limit,
-			Offset: req.Offset,
+			Limit:  limit,
+			Offset: offset,
 		}
 		stocks, err := s.store.ListStocks(ctx, arg)
 		if err != nil {
 			http.Error(rw, "error returning list of stocks", http.StatusInternalServerError)
 			return
 		}
+		log.Printf("%+v", stocks)
 		json.NewEncoder(rw).Encode(stocks)
 	}
 }
@@ -288,20 +283,17 @@ func (s *Server) GetCreatorStock(ctx context.Context) http.HandlerFunc {
 	}
 }
 
-type listCreatorStockRequest struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
-}
-
 // ListCreatorStocks returns the mappings of
 // creators and their corresponding stocks
 func (s *Server) ListCreatorStocks(ctx context.Context) http.HandlerFunc {
-	req := new(listCreatorStockRequest)
 	return func(rw http.ResponseWriter, r *http.Request) {
-		json.NewDecoder(r.Body).Decode(&req)
+		param, _ := strconv.Atoi(chi.URLParam(r, "limit"))
+		param2, _ := strconv.Atoi(chi.URLParam(r, "offset"))
+		limit := int32(param)
+		offset := int32(param2)
 		arg := db.ListCreatorStocksParams{
-			Limit:  req.Limit,
-			Offset: req.Offset,
+			Limit:  limit,
+			Offset: offset,
 		}
 		creatorStocks, err := s.store.ListCreatorStocks(ctx, arg)
 		if err != nil {
