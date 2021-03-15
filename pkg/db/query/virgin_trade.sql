@@ -5,10 +5,9 @@ INSERT INTO virgin_trade (
     fan_id,
     quantity,
     unit_price,
-    details,
-    virgin_offer_id
+    details
   )
-VALUES ($1, $2, $3, $4, $5, $6, $7)
+VALUES ($1, $2, $3, $4, $5, $6)
 RETURNING *;
 -- name: GetVirginTrade :one
 SELECT *

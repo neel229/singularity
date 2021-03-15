@@ -9,13 +9,12 @@ import (
 )
 
 type vTradeTxRequest struct {
-	StockID       int64  `json:"stock_id"`
-	CreatorID     int64  `json:"creator_id"`
-	FanID         int64  `json:"fan_id"`
-	Quantity      string `json:"quantity"`
-	UnitPrice     string `json:"unit_price"`
-	Details       string `json:"details"`
-	VirginOfferID int64  `json:"virgin_offer_id"`
+	StockID   int64  `json:"stock_id"`
+	CreatorID int64  `json:"creator_id"`
+	FanID     int64  `json:"fan_id"`
+	Quantity  string `json:"quantity"`
+	UnitPrice string `json:"unit_price"`
+	Details   string `json:"details"`
 }
 
 // VTradeTx is the transaction which takes place
@@ -26,13 +25,12 @@ func (s *Server) VTradeTx(ctx context.Context) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		json.NewDecoder(r.Body).Decode(&req)
 		arg := db.VTradeTxParams{
-			StockID:       req.StockID,
-			CreatorID:     req.CreatorID,
-			FanID:         req.FanID,
-			Quantity:      req.Quantity,
-			UnitPrice:     req.UnitPrice,
-			Details:       req.Details,
-			VirginOfferID: req.VirginOfferID,
+			StockID:   req.StockID,
+			CreatorID: req.CreatorID,
+			FanID:     req.FanID,
+			Quantity:  req.Quantity,
+			UnitPrice: req.UnitPrice,
+			Details:   req.Details,
 		}
 		result, err := s.store.VTradeTx(ctx, arg)
 		if err != nil {

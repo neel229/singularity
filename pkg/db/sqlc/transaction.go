@@ -135,13 +135,12 @@ func (s *Store) StockCreationTx(ctx context.Context, arg StockCreationTxParams) 
 // VTradeTxParams holds the input
 // parameters for the VTradeTx
 type VTradeTxParams struct {
-	StockID       int64  `json:"stock_id"`
-	CreatorID     int64  `json:"creator_id"`
-	FanID         int64  `json:"fan_id"`
-	Quantity      string `json:"quantity"`
-	UnitPrice     string `json:"unit_price"`
-	Details       string `json:"details"`
-	VirginOfferID int64  `json:"virgin_offer_id"`
+	StockID   int64  `json:"stock_id"`
+	CreatorID int64  `json:"creator_id"`
+	FanID     int64  `json:"fan_id"`
+	Quantity  string `json:"quantity"`
+	UnitPrice string `json:"unit_price"`
+	Details   string `json:"details"`
 }
 
 // VTradeTxResult holds the
@@ -162,13 +161,12 @@ func (s *Store) VTradeTx(ctx context.Context, arg VTradeTxParams) (VTradeTxResul
 
 		// Create a virgin trade entry corresponding to the transaction
 		arg1 := CreateVirginTradeParams{
-			StockID:       arg.StockID,
-			CreatorID:     arg.CreatorID,
-			FanID:         arg.FanID,
-			Quantity:      arg.Quantity,
-			UnitPrice:     arg.UnitPrice,
-			Details:       arg.Details,
-			VirginOfferID: arg.VirginOfferID,
+			StockID:   arg.StockID,
+			CreatorID: arg.CreatorID,
+			FanID:     arg.FanID,
+			Quantity:  arg.Quantity,
+			UnitPrice: arg.UnitPrice,
+			Details:   arg.Details,
 		}
 		result.VTrade, err = q.CreateVirginTrade(ctx, arg1)
 		if err != nil {

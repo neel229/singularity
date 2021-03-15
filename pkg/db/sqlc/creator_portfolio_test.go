@@ -66,5 +66,6 @@ func TestDeleteStockFromCreatorPortfolio(t *testing.T) {
 	require.NoError(t, err)
 
 	portfolio1, err := testQueries.GetPortfolioByCreatorID(context.Background(), portfolio.CreatorID)
+	require.NoError(t, err)
 	require.Empty(t, portfolio1.StockID)
 }
