@@ -113,22 +113,12 @@ type Trade struct {
 	OfferID   int64  `json:"offer_id"`
 }
 
-type VirginOffer struct {
-	ID        int64     `json:"id"`
-	CreatorID int64     `json:"creator_id"`
-	StockID   int64     `json:"stock_id"`
-	Quantity  string    `json:"quantity"`
-	Price     string    `json:"price"`
-	Ts        time.Time `json:"ts"`
-}
-
 type VirginTrade struct {
-	ID            int64  `json:"id"`
-	StockID       int64  `json:"stock_id"`
-	CreatorID     int64  `json:"creator_id"`
-	FanID         int64  `json:"fan_id"`
-	Quantity      string `json:"quantity"`
-	UnitPrice     string `json:"unit_price"`
-	Details       string `json:"details"`
-	VirginOfferID int64  `json:"virgin_offer_id"`
+	ID        int64  `json:"id"`
+	StockID   int64  `json:"stock_id"`
+	CreatorID int64  `json:"creator_id"`
+	FanID     int64  `json:"fan_id"`
+	Quantity  string `json:"quantity"`
+	UnitPrice string `json:"unit_price"`
+	Details   string `json:"details"`
 }

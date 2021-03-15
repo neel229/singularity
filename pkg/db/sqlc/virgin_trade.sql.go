@@ -14,21 +14,19 @@ INSERT INTO virgin_trade (
     fan_id,
     quantity,
     unit_price,
-    details,
-    virgin_offer_id
+    details
   )
-VALUES ($1, $2, $3, $4, $5, $6, $7)
-RETURNING id, stock_id, creator_id, fan_id, quantity, unit_price, details, virgin_offer_id
+VALUES ($1, $2, $3, $4, $5, $6)
+RETURNING id, stock_id, creator_id, fan_id, quantity, unit_price, details
 `
 
 type CreateVirginTradeParams struct {
-	StockID       int64  `json:"stock_id"`
-	CreatorID     int64  `json:"creator_id"`
-	FanID         int64  `json:"fan_id"`
-	Quantity      string `json:"quantity"`
-	UnitPrice     string `json:"unit_price"`
-	Details       string `json:"details"`
-	VirginOfferID int64  `json:"virgin_offer_id"`
+	StockID   int64  `json:"stock_id"`
+	CreatorID int64  `json:"creator_id"`
+	FanID     int64  `json:"fan_id"`
+	Quantity  string `json:"quantity"`
+	UnitPrice string `json:"unit_price"`
+	Details   string `json:"details"`
 }
 
 func (q *Queries) CreateVirginTrade(ctx context.Context, arg CreateVirginTradeParams) (VirginTrade, error) {
@@ -39,7 +37,6 @@ func (q *Queries) CreateVirginTrade(ctx context.Context, arg CreateVirginTradePa
 		arg.Quantity,
 		arg.UnitPrice,
 		arg.Details,
-		arg.VirginOfferID,
 	)
 	var i VirginTrade
 	err := row.Scan(
@@ -50,13 +47,12 @@ func (q *Queries) CreateVirginTrade(ctx context.Context, arg CreateVirginTradePa
 		&i.Quantity,
 		&i.UnitPrice,
 		&i.Details,
-		&i.VirginOfferID,
 	)
 	return i, err
 }
 
 const getVirginTrade = `-- name: GetVirginTrade :one
-SELECT id, stock_id, creator_id, fan_id, quantity, unit_price, details, virgin_offer_id
+SELECT id, stock_id, creator_id, fan_id, quantity, unit_price, details
 FROM virgin_trade
 WHERE id = $1
 LIMIT 1
@@ -73,13 +69,12 @@ func (q *Queries) GetVirginTrade(ctx context.Context, id int64) (VirginTrade, er
 		&i.Quantity,
 		&i.UnitPrice,
 		&i.Details,
-		&i.VirginOfferID,
 	)
 	return i, err
 }
 
 const listVirginTradesByCreator = `-- name: ListVirginTradesByCreator :many
-SELECT id, stock_id, creator_id, fan_id, quantity, unit_price, details, virgin_offer_id
+SELECT id, stock_id, creator_id, fan_id, quantity, unit_price, details
 FROM virgin_trade
 WHERE creator_id = $1
 LIMIT $2 OFFSET $3
@@ -108,7 +103,6 @@ func (q *Queries) ListVirginTradesByCreator(ctx context.Context, arg ListVirginT
 			&i.Quantity,
 			&i.UnitPrice,
 			&i.Details,
-			&i.VirginOfferID,
 		); err != nil {
 			return nil, err
 		}
@@ -124,7 +118,7 @@ func (q *Queries) ListVirginTradesByCreator(ctx context.Context, arg ListVirginT
 }
 
 const listVirginTradesByFan = `-- name: ListVirginTradesByFan :many
-SELECT id, stock_id, creator_id, fan_id, quantity, unit_price, details, virgin_offer_id
+SELECT id, stock_id, creator_id, fan_id, quantity, unit_price, details
 FROM virgin_trade
 WHERE fan_id = $1
 LIMIT $2 OFFSET $3
@@ -153,7 +147,6 @@ func (q *Queries) ListVirginTradesByFan(ctx context.Context, arg ListVirginTrade
 			&i.Quantity,
 			&i.UnitPrice,
 			&i.Details,
-			&i.VirginOfferID,
 		); err != nil {
 			return nil, err
 		}

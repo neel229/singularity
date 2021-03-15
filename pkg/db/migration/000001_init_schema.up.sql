@@ -71,14 +71,6 @@ CREATE TABLE "creator_portfolio" (
   "stock_id" bigserial NOT NULL,
   "quantity" decimal(16, 6) NOT NULL
 );
-CREATE TABLE "virgin_offer" (
-  "id" bigserial PRIMARY KEY,
-  "creator_id" bigserial NOT NULL,
-  "stock_id" bigserial NOT NULL,
-  "quantity" decimal(16, 6) NOT NULL,
-  "price" decimal(16, 6) NOT NULL,
-  "ts" timestamptz NOT NULL DEFAULT (now())
-);
 CREATE TABLE "offer" (
   "id" bigserial PRIMARY KEY,
   "trader_id" bigserial NOT NULL,
@@ -96,8 +88,7 @@ CREATE TABLE "virgin_trade" (
   "fan_id" bigserial NOT NULL,
   "quantity" decimal(16, 6) NOT NULL,
   "unit_price" decimal(16, 6) NOT NULL,
-  "details" text NOT NULL,
-  "virgin_offer_id" bigserial NOT NULL
+  "details" text NOT NULL
 );
 CREATE TABLE "trade" (
   "id" bigserial PRIMARY KEY,
@@ -155,8 +146,6 @@ ALTER TABLE "offer"
 ADD FOREIGN KEY ("stock_id") REFERENCES "stock" ("id");
 ALTER TABLE "trade"
 ADD FOREIGN KEY ("offer_id") REFERENCES "offer" ("id");
-ALTER TABLE "virgin_trade"
-ADD FOREIGN KEY ("virgin_offer_id") REFERENCES "virgin_offer" ("id");
 COMMENT ON COLUMN "fan"."password" IS 'Should be 64 based encoded value';
 COMMENT ON COLUMN "creator"."password" IS 'Should be 64 based encoded value';
 COMMENT ON COLUMN "creator"."virgin_tokens_left" IS 'Number of stocks the creator owns of his/hers';

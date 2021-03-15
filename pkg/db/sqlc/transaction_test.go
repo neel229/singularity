@@ -70,13 +70,12 @@ func TestVTrade(t *testing.T) {
 	store := NewStore(testDB)
 
 	arg := VTradeTxParams{
-		StockID:       1,
-		CreatorID:     1,
-		FanID:         1,
-		Quantity:      "100.000000",
-		UnitPrice:     "100.420000",
-		Details:       "safjla",
-		VirginOfferID: 1,
+		StockID:   1,
+		CreatorID: 1,
+		FanID:     1,
+		Quantity:  "100.000000",
+		UnitPrice: "100.420000",
+		Details:   "safjla",
 	}
 
 	result, err := store.VTradeTx(context.Background(), arg)
@@ -91,5 +90,4 @@ func TestVTrade(t *testing.T) {
 	require.Equal(t, arg.Quantity, vTrade.Quantity)
 	require.Equal(t, arg.UnitPrice, vTrade.UnitPrice)
 	require.Equal(t, arg.Details, vTrade.Details)
-	require.Equal(t, arg.VirginOfferID, vTrade.VirginOfferID)
 }
